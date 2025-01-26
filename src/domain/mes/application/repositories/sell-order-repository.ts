@@ -1,6 +1,6 @@
 import { SellOrder } from "../../enterprise/entities/sell-order";
 
 export abstract class SellOrderRepository {
-  abstract findById(sectorId: string): Promise<SellOrder | null>;
-  abstract create(sector: SellOrder): Promise<void>;
+  abstract findById(sellOrderId: string): Promise<SellOrder | null>;
+  abstract create(sellOrder: SellOrder): Promise<void>;
 }
