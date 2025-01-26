@@ -1,7 +1,8 @@
 import { Entity } from "@/core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
+import { Optional } from "@/core/types/optional";
 
-interface WorkOrderOperationProps {
+export interface WorkOrderOperationProps {
   workOrderId: UniqueEntityId;
   number: number;
   description: string;
@@ -10,6 +11,19 @@ interface WorkOrderOperationProps {
 }
 
 export class WorkOrderOperation extends Entity<WorkOrderOperationProps> {
+  static create(
+    props: Optional<WorkOrderOperationProps, "createdAt">,
+    id?: UniqueEntityId
+  ): WorkOrderOperation {
+    return new WorkOrderOperation(
+      {
+        ...props,
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id
+    );
+  }
+
   get workOrderId(): UniqueEntityId {
     return this.props.workOrderId;
   }
