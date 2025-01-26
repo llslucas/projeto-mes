@@ -2,10 +2,12 @@ import { Entity } from "@/core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 
-interface MachineOperatorProps {
-  number: string;
+export type MachineOperatorLevel = "Worker" | "Leader";
+
+export interface MachineOperatorProps {
+  number: number;
   name: string;
-  level: "Worker" | "Leader";
+  level: MachineOperatorLevel;
   sectorId: UniqueEntityId;
   createdAt: Date;
   updatedAt?: Date | null;
@@ -13,19 +15,20 @@ interface MachineOperatorProps {
 
 export class MachineOperator extends Entity<MachineOperatorProps> {
   static create(
-    props: Optional<MachineOperatorProps, "createdAt">,
+    props: Optional<MachineOperatorProps, "createdAt" | "level">,
     id?: UniqueEntityId
   ): MachineOperator {
     return new MachineOperator(
       {
         ...props,
+        level: props.level ?? "Worker",
         createdAt: props.createdAt ?? new Date(),
       },
       id
     );
   }
 
-  get number(): string {
+  get number(): number {
     return this.props.number;
   }
 
@@ -33,7 +36,7 @@ export class MachineOperator extends Entity<MachineOperatorProps> {
     return this.props.name;
   }
 
-  get level(): string {
+  get level(): MachineOperatorLevel {
     return this.props.level;
   }
 
