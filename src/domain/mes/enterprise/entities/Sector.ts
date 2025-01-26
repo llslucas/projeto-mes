@@ -3,7 +3,7 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 import { Injectable } from "@nestjs/common";
 
-interface SectorProps {
+export interface SectorProps {
   name: string;
   description: string;
   createdAt: Date;
