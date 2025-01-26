@@ -5,15 +5,15 @@ export class InMemorySectorRepository implements SectorRepository {
   public items: Sector[] = [];
 
   async findById(sectorId: string) {
-    const question = this.items.find((sector) => {
+    const sector = this.items.find((sector) => {
       return sector.id.toString() === sectorId;
     });
 
-    if (!question) {
+    if (!sector) {
       return null;
     }
 
-    return question;
+    return sector;
   }
 
   async create(sector: Sector) {
