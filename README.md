@@ -1,8 +1,8 @@
 RF
 [x] Deve ser possível cadastrar setores.
 [x] Deve ser possível cadastrar máquinas.
-[ ] Deve ser possível cadastrar operadores.
-[ ] Deve ser possível cadastrar pedidos de venda.
+[x] Deve ser possível cadastrar operadores.
+[x] Deve ser possível cadastrar pedidos de venda.
 [ ] Deve ser possível cadastrar ordens de produção.
 [ ] Deve ser possível cadastrar apontamentos de produção.
 [ ] Deve ser possível representar o estado atual da máquina nos seguintes estados:
