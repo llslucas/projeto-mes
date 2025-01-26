@@ -3,7 +3,7 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 import { Injectable } from "@nestjs/common";
 
-interface MachineProps {
+export interface MachineProps {
   name: string;
   description: string;
   sectorId: UniqueEntityId;
@@ -15,13 +15,14 @@ interface MachineProps {
 @Injectable()
 export class Machine extends Entity<MachineProps> {
   static create(
-    props: Optional<MachineProps, "createdAt">,
+    props: Optional<MachineProps, "createdAt" | "status">,
     id?: UniqueEntityId
   ): Machine {
     return new Machine(
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
+        status: props.status ?? "Fora de produção",
       },
       id
     );
