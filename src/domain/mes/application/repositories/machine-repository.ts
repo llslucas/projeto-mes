@@ -1,4 +1,4 @@
-import { Machine } from "../../enterprise/entities/Machine";
+import { Machine } from "../../enterprise/entities/machine";
 
 export abstract class MachineRepository {
   abstract create(machine: Machine): Promise<void>;

@@ -1,5 +1,5 @@
 import { MachineRepository } from "@/domain/mes/application/repositories/machine-repository";
-import { Machine } from "@/domain/mes/enterprise/entities/Machine";
+import { Machine } from "@/domain/mes/enterprise/entities/machine";
 
 export class InMemoryMachineRepository implements MachineRepository {
   public items: Machine[] = [];

@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
-import { Sector, SectorProps } from "@/domain/mes/enterprise/entities/Sector";
+import { Sector, SectorProps } from "@/domain/mes/enterprise/entities/sector";
 
 export function makeSector(
   override: Partial<SectorProps> = {},

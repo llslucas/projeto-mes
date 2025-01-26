@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { SectorRepository } from "../repositories/sector-repository";
-import { Sector } from "../../enterprise/entities/Sector";
+import { Sector } from "../../enterprise/entities/sector";
 import { Either, right } from "@/core/either";
 
 interface CreateSectorUseCaseRequest {

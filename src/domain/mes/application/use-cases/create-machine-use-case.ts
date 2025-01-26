@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Machine } from "../../enterprise/entities/Machine";
+import { Machine } from "../../enterprise/entities/machine";
 import { Either, left, right } from "@/core/either";
 import { MachineRepository } from "../repositories/machine-repository";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";

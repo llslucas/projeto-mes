@@ -3,7 +3,7 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import {
   Machine,
   MachineProps,
-} from "@/domain/mes/enterprise/entities/Machine";
+} from "@/domain/mes/enterprise/entities/machine";
 
 export function makeMachine(
   override: Partial<MachineProps> = {},

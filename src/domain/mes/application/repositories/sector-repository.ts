@@ -1,4 +1,4 @@
-import { Sector } from "../../enterprise/entities/Sector";
+import { Sector } from "../../enterprise/entities/sector";
 
 export abstract class SectorRepository {
   abstract findById(sectorId: string): Promise<Sector | null>;
