@@ -1,7 +1,6 @@
 import { Entity } from "@/core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
-import { Injectable } from "@nestjs/common";
 
 export interface SellOrderProps {
   number: number;
@@ -14,7 +13,6 @@ export interface SellOrderProps {
   updatedAt?: Date | null;
 }
 
-@Injectable()
 export class SellOrder extends Entity<SellOrderProps> {
   static create(
     props: Optional<SellOrderProps, "createdAt" | "status">,

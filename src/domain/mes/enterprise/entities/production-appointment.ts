@@ -1,6 +1,5 @@
 import { Entity } from "@/core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
-import { Injectable } from "@nestjs/common";
 
 interface ProductionAppointmentProps {
   machineId: UniqueEntityId;
@@ -13,7 +12,6 @@ interface ProductionAppointmentProps {
   updatedAt: Date;
 }
 
-@Injectable()
 export class ProductionAppointment extends Entity<ProductionAppointmentProps> {
   get machineId(): UniqueEntityId {
     return this.props.machineId;

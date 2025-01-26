@@ -1,7 +1,6 @@
 import { Entity } from "@/core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
-import { Injectable } from "@nestjs/common";
 
 export interface MachineProps {
   name: string;
@@ -12,7 +11,6 @@ export interface MachineProps {
   updatedAt?: Date | null;
 }
 
-@Injectable()
 export class Machine extends Entity<MachineProps> {
   static create(
     props: Optional<MachineProps, "createdAt" | "status">,
