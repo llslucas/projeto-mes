@@ -3,17 +3,16 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 import { Injectable } from "@nestjs/common";
 
-interface WorkOrderProps {
+export interface WorkOrderProps {
   number: number;
-  sellOrderId: UniqueEntityId;
-  type: string;
+  sellOrderId?: UniqueEntityId | null;
   status: string;
   deliveryDate: Date;
   productName: string;
   productDescription: string;
   quantity: number;
   balance: number;
-  comments: string;
+  comments?: string | null;
   createdAt: Date;
   updatedAt?: Date | null;
 }
@@ -21,13 +20,15 @@ interface WorkOrderProps {
 @Injectable()
 export class WorkOrder extends Entity<WorkOrderProps> {
   static create(
-    props: Optional<WorkOrderProps, "createdAt">,
+    props: Optional<WorkOrderProps, "createdAt" | "balance" | "status">,
     id?: UniqueEntityId
   ): WorkOrder {
     return new WorkOrder(
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
+        balance: props.quantity,
+        status: props.status ?? "Aberto",
       },
       id
     );
@@ -37,8 +38,8 @@ export class WorkOrder extends Entity<WorkOrderProps> {
     return this.props.number;
   }
 
-  get type(): string {
-    return this.props.type;
+  get sellOrderId(): UniqueEntityId | null | undefined {
+    return this.props.sellOrderId;
   }
 
   get status(): string {
@@ -67,5 +68,13 @@ export class WorkOrder extends Entity<WorkOrderProps> {
 
   get comments(): string {
     return this.props.comments;
+  }
+
+  get createdAt(): Date {
+    return this.props.createdAt;
+  }
+
+  get updatedAt(): Date | null | undefined {
+    return this.props.updatedAt;
   }
 }
