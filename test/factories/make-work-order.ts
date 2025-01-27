@@ -16,7 +16,6 @@ export function makeWorkOrder(
       number: faker.number.int(),
       productName: faker.commerce.product(),
       productDescription: faker.commerce.productName(),
-      quantity: faker.number.int({ min: 0, max: 100 }),
       deliveryDate: faker.date.soon({ refDate }),
       ...override,
     },

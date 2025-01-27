@@ -13,8 +13,6 @@ interface CreateWorkOrderUseCaseRequest {
   deliveryDate: Date;
   productName: string;
   productDescription: string;
-  quantity: number;
-  balance: number;
   comments: string;
 }
 
@@ -39,7 +37,6 @@ export class CreateWorkOrderUseCase {
     deliveryDate,
     productName,
     productDescription,
-    quantity,
     comments,
   }: CreateWorkOrderUseCaseRequest): Promise<CreateWorkOrderUseCaseResponse> {
     if (sellOrderId) {
@@ -59,7 +56,6 @@ export class CreateWorkOrderUseCase {
       deliveryDate,
       productName,
       productDescription,
-      quantity,
       comments,
     });
 

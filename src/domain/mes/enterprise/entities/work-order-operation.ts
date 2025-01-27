@@ -6,19 +6,22 @@ export interface WorkOrderOperationProps {
   workOrderId: UniqueEntityId;
   number: number;
   description: string;
+  quantity: number;
+  balance: number;
   createdAt: Date;
   updatedAt?: Date | null;
 }
 
 export class WorkOrderOperation extends Entity<WorkOrderOperationProps> {
   static create(
-    props: Optional<WorkOrderOperationProps, "createdAt">,
+    props: Optional<WorkOrderOperationProps, "createdAt" | "balance">,
     id?: UniqueEntityId
   ): WorkOrderOperation {
     return new WorkOrderOperation(
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
+        balance: props.balance ?? props.quantity,
       },
       id
     );
@@ -34,6 +37,14 @@ export class WorkOrderOperation extends Entity<WorkOrderOperationProps> {
 
   get description(): string {
     return this.props.description;
+  }
+
+  get quantity(): number {
+    return this.props.quantity;
+  }
+
+  get balance(): number {
+    return this.props.balance;
   }
 
   get createdAt(): Date {

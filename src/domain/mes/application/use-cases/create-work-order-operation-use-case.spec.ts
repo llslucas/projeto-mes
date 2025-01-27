@@ -33,6 +33,8 @@ describe("Create work order operation use case", () => {
       workOrderId: workOrderOperation.workOrderId,
       number: workOrderOperation.number,
       description: workOrderOperation.description,
+      quantity: workOrderOperation.quantity,
+      balance: workOrderOperation.balance,
     });
 
     const success = result.isRight();
@@ -57,6 +59,8 @@ describe("Create work order operation use case", () => {
       workOrderId: workOrderOperation.workOrderId,
       number: workOrderOperation.number,
       description: workOrderOperation.description,
+      quantity: workOrderOperation.quantity,
+      balance: workOrderOperation.balance,
     });
 
     const error = result.isLeft();

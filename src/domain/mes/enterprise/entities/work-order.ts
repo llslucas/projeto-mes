@@ -9,8 +9,6 @@ export interface WorkOrderProps {
   deliveryDate: Date;
   productName: string;
   productDescription: string;
-  quantity: number;
-  balance: number;
   comments?: string | null;
   createdAt: Date;
   updatedAt?: Date | null;
@@ -18,14 +16,13 @@ export interface WorkOrderProps {
 
 export class WorkOrder extends Entity<WorkOrderProps> {
   static create(
-    props: Optional<WorkOrderProps, "createdAt" | "balance" | "status">,
+    props: Optional<WorkOrderProps, "createdAt" | "status">,
     id?: UniqueEntityId
   ): WorkOrder {
     return new WorkOrder(
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
-        balance: props.quantity,
         status: props.status ?? "Aberto",
       },
       id
@@ -54,14 +51,6 @@ export class WorkOrder extends Entity<WorkOrderProps> {
 
   get productDescription(): string {
     return this.props.productDescription;
-  }
-
-  get quantity(): number {
-    return this.props.quantity;
-  }
-
-  get balance(): number {
-    return this.props.balance;
   }
 
   get comments(): string {

@@ -10,6 +10,8 @@ interface CreateWorkOrderOperationUseCaseRequest {
   workOrderId: UniqueEntityId;
   number: number;
   description: string;
+  quantity: number;
+  balance: number;
 }
 
 type CreateWorkOrderOperationUseCaseResponse = Either<
@@ -30,6 +32,8 @@ export class CreateWorkOrderOperationUseCase {
     workOrderId,
     number,
     description,
+    quantity,
+    balance,
   }: CreateWorkOrderOperationUseCaseRequest): Promise<CreateWorkOrderOperationUseCaseResponse> {
     const workOrder = await this.workOrderRepository.findById(
       workOrderId.toString()
@@ -43,6 +47,8 @@ export class CreateWorkOrderOperationUseCase {
       workOrderId,
       number,
       description,
+      quantity,
+      balance,
     });
 
     await this.workOrderOperationRepository.create(workOrderOperation);
