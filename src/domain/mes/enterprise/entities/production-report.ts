@@ -1,18 +1,19 @@
 import { Entity } from "@/core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 
-interface ProductionAppointmentProps {
+interface ProductionReportProps {
   machineId: UniqueEntityId;
   machineOperatorId: UniqueEntityId;
   workOrderOperationId: UniqueEntityId;
   appointmentTime: Date;
   appointmentType: string;
   partsReported: number;
+  scrapsReported: number;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export class ProductionAppointment extends Entity<ProductionAppointmentProps> {
+export class ProductionReport extends Entity<ProductionReportProps> {
   get machineId(): UniqueEntityId {
     return this.props.machineId;
   }
