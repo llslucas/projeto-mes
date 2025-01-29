@@ -5,15 +5,20 @@ import { CreateWorkOrderOperationUseCase } from "./create-work-order-operation-u
 import { makeWorkOrderOperation } from "test/factories/make-work-order-operation";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { InMemoryProductionReportRepository } from "test/repositories/in-memory-production-report-repository";
 
 describe("Create work order operation use case", () => {
   let workOrderRepository: InMemoryWorkOrderRepository;
+  let productionReportRepository: InMemoryProductionReportRepository;
   let workOrderOperationRepository: InMemoryWorkOrderOperationRepository;
   let sut: CreateWorkOrderOperationUseCase;
 
   beforeEach(async () => {
     workOrderRepository = new InMemoryWorkOrderRepository();
-    workOrderOperationRepository = new InMemoryWorkOrderOperationRepository();
+    productionReportRepository = new InMemoryProductionReportRepository();
+    workOrderOperationRepository = new InMemoryWorkOrderOperationRepository(
+      productionReportRepository
+    );
     sut = new CreateWorkOrderOperationUseCase(
       workOrderRepository,
       workOrderOperationRepository
@@ -30,7 +35,7 @@ describe("Create work order operation use case", () => {
     });
 
     const result = await sut.execute({
-      workOrderId: workOrderOperation.workOrderId,
+      workOrderId: workOrderOperation.workOrderId.toString(),
       number: workOrderOperation.number,
       description: workOrderOperation.description,
       quantity: workOrderOperation.quantity,
@@ -56,7 +61,7 @@ describe("Create work order operation use case", () => {
     });
 
     const result = await sut.execute({
-      workOrderId: workOrderOperation.workOrderId,
+      workOrderId: workOrderOperation.workOrderId.toString(),
       number: workOrderOperation.number,
       description: workOrderOperation.description,
       quantity: workOrderOperation.quantity,

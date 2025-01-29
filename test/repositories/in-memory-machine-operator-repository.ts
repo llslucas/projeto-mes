@@ -6,6 +6,10 @@ export class InMemoryMachineOperatorRepository
 {
   public items: MachineOperator[] = [];
 
+  async findById(machineOperatorId: string): Promise<MachineOperator> {
+    return this.items.find((item) => item.id.toString() === machineOperatorId);
+  }
+
   async create(machineOperator: MachineOperator) {
     this.items.push(machineOperator);
   }

@@ -1,48 +1,32 @@
-import { Entity } from "@/core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
+import { ReportProps, Report } from "./report";
+import { Optional } from "@/core/types/optional";
 
-interface ProductionReportProps {
-  machineId: UniqueEntityId;
-  machineOperatorId: UniqueEntityId;
-  workOrderOperationId: UniqueEntityId;
-  appointmentTime: Date;
-  appointmentType: string;
+export interface ProductionReportProps extends ReportProps {
   partsReported: number;
   scrapsReported: number;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-export class ProductionReport extends Entity<ProductionReportProps> {
-  get machineId(): UniqueEntityId {
-    return this.props.machineId;
-  }
-
-  get machineOperatorId(): UniqueEntityId {
-    return this.props.machineOperatorId;
-  }
-
-  get workOrderOperationId(): UniqueEntityId {
-    return this.props.workOrderOperationId;
-  }
-
-  get appointmentTime(): Date {
-    return this.props.appointmentTime;
-  }
-
-  get appointmentType(): string {
-    return this.props.appointmentType;
+export class ProductionReport extends Report<ProductionReportProps> {
+  static create(
+    props: Optional<ProductionReportProps, "createdAt" | "reportType">,
+    id?: UniqueEntityId
+  ): ProductionReport {
+    return new ProductionReport(
+      {
+        ...props,
+        createdAt: props.createdAt ?? new Date(),
+        reportType: "Production",
+      },
+      id
+    );
   }
 
   get partsReported(): number {
     return this.props.partsReported;
   }
 
-  get createdAt(): Date {
-    return this.props.createdAt;
-  }
-
-  get updatedAt(): Date {
-    return this.props.updatedAt;
+  get scrapsReported(): number {
+    return this.props.scrapsReported;
   }
 }

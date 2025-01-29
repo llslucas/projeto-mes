@@ -10,6 +10,8 @@ export interface WorkOrderOperationProps {
   quantity: number;
   balance: number;
   productionReports: ProductionReportList;
+  productionBegin?: Date | null;
+  productionEnd?: Date | null;
   createdAt: Date;
   updatedAt?: Date | null;
 }
@@ -54,11 +56,35 @@ export class WorkOrderOperation extends AggregateRoot<WorkOrderOperationProps> {
     return this.props.balance;
   }
 
+  get productionReports(): ProductionReportList {
+    return this.props.productionReports;
+  }
+
   get createdAt(): Date {
     return this.props.createdAt;
   }
 
   get updatedAt(): Date | null | undefined {
     return this.props.updatedAt;
+  }
+
+  get productionBegin(): Date | null | undefined {
+    return this.props.productionBegin;
+  }
+
+  get productionEnd(): Date | null | undefined {
+    return this.props.productionEnd;
+  }
+
+  set balance(balance: number) {
+    this.props.balance = balance;
+  }
+
+  set productionBegin(productionBegin: Date) {
+    this.props.productionBegin = productionBegin;
+  }
+
+  set productionEnd(productionEnd: Date) {
+    this.props.productionEnd = productionEnd;
   }
 }
