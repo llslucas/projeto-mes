@@ -3,8 +3,10 @@ RF
 [x] Deve ser possível cadastrar máquinas.
 [x] Deve ser possível cadastrar operadores.
 [x] Deve ser possível cadastrar pedidos de venda.
-[ ] Deve ser possível cadastrar ordens de produção.
-[ ] Deve ser possível cadastrar apontamentos de produção.
+[x] Deve ser possível cadastrar ordens de produção.
+[x] Deve ser possível realizar apontamentos de produção.
+[ ] Deve ser possível realizar Inícios de produção.
+[ ] Deve ser possível realizar finais de produção.
 [ ] Deve ser possível representar o estado atual da máquina nos seguintes estados:
   [ ] Fora de produção
   [ ] Produzindo
