@@ -11,4 +11,9 @@ export class InMemoryMachineRepository implements MachineRepository {
   async create(machine: Machine) {
     this.items.push(machine);
   }
+
+  async save(machine: Machine): Promise<void> {
+    const index = this.items.findIndex((item) => item.equals(machine));
+    this.items[index] = machine;
+  }
 }

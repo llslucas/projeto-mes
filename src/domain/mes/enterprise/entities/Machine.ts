@@ -2,11 +2,20 @@ import { Entity } from "@/core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 
+export type MachineStatus =
+  | "Fora de produção"
+  | "Produzindo"
+  | "Em setup"
+  | "Em manutenção"
+  | "Fora de turno";
+
 export interface MachineProps {
   name: string;
   description: string;
   sectorId: UniqueEntityId;
-  status: string;
+  status: MachineStatus;
+  workOrderId?: UniqueEntityId | null;
+  machineOperatorId?: UniqueEntityId | null;
   createdAt: Date;
   updatedAt?: Date | null;
 }
@@ -42,11 +51,31 @@ export class Machine extends Entity<MachineProps> {
     return this.props.status;
   }
 
+  get workOrderId() {
+    return this.props.workOrderId;
+  }
+
+  get machineOperatorId() {
+    return this.props.machineOperatorId;
+  }
+
   get createdAt() {
     return this.props.createdAt;
   }
 
   get updatedAt() {
     return this.props.updatedAt;
+  }
+
+  set status(status: MachineStatus) {
+    this.props.status = status;
+  }
+
+  set workOrderId(workOrderId: UniqueEntityId | null) {
+    this.props.workOrderId = workOrderId;
+  }
+
+  set machineOperatorId(machineOperatorId: UniqueEntityId | null) {
+    this.props.machineOperatorId = machineOperatorId;
   }
 }
