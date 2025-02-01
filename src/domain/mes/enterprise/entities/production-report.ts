@@ -9,8 +9,8 @@ export type ProductionReportType =
 
 export interface ProductionReportProps extends ReportProps {
   type: ProductionReportType;
-  partsReported: number;
-  scrapsReported: number;
+  partsReported?: number | null;
+  scrapsReported?: number | null;
 }
 
 export class ProductionReport extends Report<ProductionReportProps> {
@@ -27,11 +27,11 @@ export class ProductionReport extends Report<ProductionReportProps> {
     );
   }
 
-  get partsReported(): number {
+  get partsReported(): number | null | undefined {
     return this.props.partsReported;
   }
 
-  get scrapsReported(): number {
+  get scrapsReported(): number | null | undefined {
     return this.props.scrapsReported;
   }
 }
