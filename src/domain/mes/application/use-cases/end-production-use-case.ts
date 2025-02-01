@@ -81,6 +81,7 @@ export class EndProductionUseCase {
     machine.status = "Fora de produção";
     machine.lastReportId = null;
     machine.lastReportTime = null;
+    machine.workOrderOperationId = null;
     await this.machineRepository.save(machine);
 
     return right({ workOrderOperation });

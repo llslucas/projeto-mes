@@ -84,6 +84,9 @@ describe("End production use case", () => {
 
       expect(newWorkOrderOperation).toEqual(workOrderOperationInRepository);
       expect(machineInRepository.status).toBe("Fora de produção");
+      expect(machineInRepository.workOrderOperationId).toBeNull();
+      expect(machineInRepository.lastReportId).toBeNull();
+      expect(machineInRepository.lastReportTime).toBeNull();
     }
   });
 
