@@ -16,6 +16,8 @@ export interface MachineProps {
   status: MachineStatus;
   workOrderOperationId?: UniqueEntityId | null;
   machineOperatorId?: UniqueEntityId | null;
+  lastReportId?: UniqueEntityId | null;
+  lastReportTime?: Date | null;
   createdAt: Date;
   updatedAt?: Date | null;
 }
@@ -59,6 +61,14 @@ export class Machine extends Entity<MachineProps> {
     return this.props.machineOperatorId;
   }
 
+  get lastReportId() {
+    return this.props.lastReportId;
+  }
+
+  get lastReportTime() {
+    return this.props.lastReportTime;
+  }
+
   get createdAt() {
     return this.props.createdAt;
   }
@@ -77,5 +87,13 @@ export class Machine extends Entity<MachineProps> {
 
   set machineOperatorId(machineOperatorId: UniqueEntityId | null) {
     this.props.machineOperatorId = machineOperatorId;
+  }
+
+  set lastReportId(lastReportId: UniqueEntityId | null) {
+    this.props.lastReportId = lastReportId;
+  }
+
+  set lastReportTime(lastReportTime: Date | null) {
+    this.props.lastReportTime = lastReportTime;
   }
 }

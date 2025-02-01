@@ -8,15 +8,16 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { WorkOrderOperation } from "../../enterprise/entities/work-order-operation";
 import { SetupReport } from "../../enterprise/entities/setup-report";
 import { NotAllowedError } from "@/core/errors/not-allowed-error";
+import dayjs from "dayjs";
 
-interface StartSetupUseCaseRequest {
+interface EndSetupUseCaseRequest {
   workOrderOperationId: string;
   machineId: string;
   machineOperatorId: string;
   reportTime: Date;
 }
 
-type StartSetupUseCaseResponse = Either<
+type EndSetupUseCaseResponse = Either<
   ResourceNotFoundError,
   {
     workOrderOperation: WorkOrderOperation;
@@ -24,7 +25,7 @@ type StartSetupUseCaseResponse = Either<
 >;
 
 @Injectable()
-export class StartSetupUseCase {
+export class EndSetupUseCase {
   constructor(
     private workOrderOperationRepository: WorkOrderOperationRepository,
     private machineRepository: MachineRepository,
@@ -36,7 +37,7 @@ export class StartSetupUseCase {
     machineId,
     machineOperatorId,
     reportTime,
-  }: StartSetupUseCaseRequest): Promise<StartSetupUseCaseResponse> {
+  }: EndSetupUseCaseRequest): Promise<EndSetupUseCaseResponse> {
     const workOrderOperation = await this.workOrderOperationRepository.findById(
       workOrderOperationId.toString()
     );
@@ -61,23 +62,28 @@ export class StartSetupUseCase {
     if (
       machine.workOrderOperationId.toString() !== workOrderOperationId ||
       machine.machineOperatorId.toString() !== machineOperatorId ||
-      machine.status !== "Produzindo"
+      machine.status !== "Em setup"
     ) {
       return left(new NotAllowedError());
     }
+
+    const startOfSetup = dayjs(machine.lastReportTime);
+    const endOfSetup = dayjs(reportTime);
+    const elapsedTimeInSeconds = endOfSetup.diff(startOfSetup, "seconds");
 
     const setupReport = SetupReport.create({
       machineId: new UniqueEntityId(machineId),
       machineOperatorId: new UniqueEntityId(machineOperatorId),
       workOrderOperationId: new UniqueEntityId(workOrderOperationId),
-      type: "Setup start",
+      type: "Setup end",
       reportTime,
+      elapsedTimeInSeconds,
     });
 
     workOrderOperation.setupReports.add(setupReport);
     await this.workOrderOperationRepository.save(workOrderOperation);
 
-    machine.status = "Em setup";
+    machine.status = "Produzindo";
     machine.lastReportId = setupReport.id;
     machine.lastReportTime = setupReport.reportTime;
     await this.machineRepository.save(machine);
