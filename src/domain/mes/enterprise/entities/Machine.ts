@@ -14,7 +14,7 @@ export interface MachineProps {
   description: string;
   sectorId: UniqueEntityId;
   status: MachineStatus;
-  workOrderId?: UniqueEntityId | null;
+  workOrderOperationId?: UniqueEntityId | null;
   machineOperatorId?: UniqueEntityId | null;
   createdAt: Date;
   updatedAt?: Date | null;
@@ -51,8 +51,8 @@ export class Machine extends Entity<MachineProps> {
     return this.props.status;
   }
 
-  get workOrderId() {
-    return this.props.workOrderId;
+  get workOrderOperationId() {
+    return this.props.workOrderOperationId;
   }
 
   get machineOperatorId() {
@@ -71,8 +71,8 @@ export class Machine extends Entity<MachineProps> {
     this.props.status = status;
   }
 
-  set workOrderId(workOrderId: UniqueEntityId | null) {
-    this.props.workOrderId = workOrderId;
+  set workOrderOperationId(workOrderOperationId: UniqueEntityId | null) {
+    this.props.workOrderOperationId = workOrderOperationId;
   }
 
   set machineOperatorId(machineOperatorId: UniqueEntityId | null) {

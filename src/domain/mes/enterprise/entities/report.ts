@@ -1,15 +1,12 @@
 import { Entity } from "@/core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 
-type ReportType = "Production" | "Setup";
-
 export interface ReportProps {
   machineId: UniqueEntityId;
   machineOperatorId: UniqueEntityId;
   workOrderOperationId: UniqueEntityId;
-  reportType: ReportType;
   reportTime: Date;
-  elapsedTimeInSeconds: number;
+  elapsedTimeInSeconds?: number | null;
   createdAt: Date;
   updatedAt?: Date | null;
 }
@@ -25,10 +22,6 @@ export abstract class Report<Props extends ReportProps> extends Entity<Props> {
 
   get workOrderOperationId(): UniqueEntityId {
     return this.props.workOrderOperationId;
-  }
-
-  get reportType(): ReportType {
-    return this.props.reportType;
   }
 
   get reportTime(): Date {

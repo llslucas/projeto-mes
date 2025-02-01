@@ -9,18 +9,22 @@ import { makeProductionReport } from "test/factories/make-production-report";
 import { ReportProductionUseCase } from "./report-production-use-case";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { NotAllowedError } from "@/core/errors/not-allowed-error";
+import { InMemorySetupReportRepository } from "test/repositories/in-memory-setup-report-repository";
 
 describe("Create production report use case", () => {
   let productionReportRepository: InMemoryProductionReportRepository;
+  let setupReportRepository: InMemorySetupReportRepository;
   let workOrderOperationRepository: InMemoryWorkOrderOperationRepository;
   let machineRepository: InMemoryMachineRepository;
   let machineOperatorRepository: InMemoryMachineOperatorRepository;
   let sut: ReportProductionUseCase;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     productionReportRepository = new InMemoryProductionReportRepository();
+    setupReportRepository = new InMemorySetupReportRepository();
     workOrderOperationRepository = new InMemoryWorkOrderOperationRepository(
-      productionReportRepository
+      productionReportRepository,
+      setupReportRepository
     );
     machineRepository = new InMemoryMachineRepository();
     machineOperatorRepository = new InMemoryMachineOperatorRepository();

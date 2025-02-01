@@ -18,6 +18,7 @@ export function makeProductionReport(
       partsReported: faker.number.int({ min: 0, max: 100 }),
       elapsedTimeInSeconds: faker.number.int({ min: 0, max: 1000 }),
       scrapsReported: 0,
+      type: "Production report",
       ...override,
     },
     id

@@ -1,25 +1,22 @@
 import { Injectable } from "@nestjs/common";
 import { Either, left, right } from "@/core/either";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { ProductionReport } from "../../enterprise/entities/production-report";
 import { MachineRepository } from "../repositories/machine-repository";
 import { MachineOperatorRepository } from "../repositories/machine-operator-repository";
 import { WorkOrderOperationRepository } from "../repositories/work-order-operation-repository";
-import { NotAllowedError } from "@/core/errors/not-allowed-error";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { WorkOrderOperation } from "../../enterprise/entities/work-order-operation";
+import { SetupReport } from "../../enterprise/entities/setup-report";
+import { NotAllowedError } from "@/core/errors/not-allowed-error";
 
-interface ReportProductionUseCaseRequest {
+interface StartSetupUseCaseRequest {
   workOrderOperationId: string;
   machineId: string;
   machineOperatorId: string;
   reportTime: Date;
-  elapsedTimeInSeconds: number;
-  partsReported: number;
-  scrapsReported: number;
 }
 
-type ReportProductionUseCaseResponse = Either<
+type StartSetupUseCaseResponse = Either<
   ResourceNotFoundError,
   {
     workOrderOperation: WorkOrderOperation;
@@ -27,7 +24,7 @@ type ReportProductionUseCaseResponse = Either<
 >;
 
 @Injectable()
-export class ReportProductionUseCase {
+export class StartSetupUseCase {
   constructor(
     private workOrderOperationRepository: WorkOrderOperationRepository,
     private machineRepository: MachineRepository,
@@ -39,10 +36,7 @@ export class ReportProductionUseCase {
     machineId,
     machineOperatorId,
     reportTime,
-    elapsedTimeInSeconds,
-    partsReported,
-    scrapsReported,
-  }: ReportProductionUseCaseRequest): Promise<ReportProductionUseCaseResponse> {
+  }: StartSetupUseCaseRequest): Promise<StartSetupUseCaseResponse> {
     const workOrderOperation = await this.workOrderOperationRepository.findById(
       workOrderOperationId.toString()
     );
@@ -57,6 +51,13 @@ export class ReportProductionUseCase {
       return left(new ResourceNotFoundError("machine"));
     }
 
+    if (
+      machine.workOrderOperationId.toString() !== workOrderOperationId ||
+      machine.status !== "Produzindo"
+    ) {
+      return left(new NotAllowedError());
+    }
+
     const machineOperator =
       await this.machineOperatorRepository.findById(machineOperatorId);
 
@@ -64,29 +65,23 @@ export class ReportProductionUseCase {
       return left(new ResourceNotFoundError("machineOperator"));
     }
 
-    if (partsReported > workOrderOperation.balance) {
+    if (!machine.machineOperatorId.equals(machineOperator.id)) {
       return left(new NotAllowedError());
     }
 
-    const productionReport = ProductionReport.create({
+    const setupReport = SetupReport.create({
       machineId: new UniqueEntityId(machineId),
       machineOperatorId: new UniqueEntityId(machineOperatorId),
       workOrderOperationId: new UniqueEntityId(workOrderOperationId),
-      type: "Production report",
+      type: "Setup start",
       reportTime,
-      partsReported,
-      scrapsReported,
-      elapsedTimeInSeconds,
     });
 
-    workOrderOperation.productionReports.add(productionReport);
-    workOrderOperation.balance -= partsReported + scrapsReported;
-
-    if (workOrderOperation.balance === 0) {
-      workOrderOperation.productionEnd = new Date();
-    }
-
+    workOrderOperation.setupReports.add(setupReport);
     await this.workOrderOperationRepository.save(workOrderOperation);
+
+    machine.status = "Em setup";
+    await this.machineRepository.save(machine);
 
     return right({ workOrderOperation });
   }

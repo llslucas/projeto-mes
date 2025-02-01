@@ -6,18 +6,22 @@ import { makeWorkOrderOperation } from "test/factories/make-work-order-operation
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { InMemoryProductionReportRepository } from "test/repositories/in-memory-production-report-repository";
+import { InMemorySetupReportRepository } from "test/repositories/in-memory-setup-report-repository";
 
 describe("Create work order operation use case", () => {
   let workOrderRepository: InMemoryWorkOrderRepository;
   let productionReportRepository: InMemoryProductionReportRepository;
+  let setupReportRepository: InMemorySetupReportRepository;
   let workOrderOperationRepository: InMemoryWorkOrderOperationRepository;
   let sut: CreateWorkOrderOperationUseCase;
 
   beforeEach(async () => {
     workOrderRepository = new InMemoryWorkOrderRepository();
     productionReportRepository = new InMemoryProductionReportRepository();
+    setupReportRepository = new InMemorySetupReportRepository();
     workOrderOperationRepository = new InMemoryWorkOrderOperationRepository(
-      productionReportRepository
+      productionReportRepository,
+      setupReportRepository
     );
     sut = new CreateWorkOrderOperationUseCase(
       workOrderRepository,

@@ -1,11 +1,15 @@
 import { ProductionReportRepository } from "@/domain/mes/application/repositories/production-report-repository";
+import { SetupReportRepository } from "@/domain/mes/application/repositories/setup-report-repository";
 import { WorkOrderOperationRepository } from "@/domain/mes/application/repositories/work-order-operation-repository";
 import { WorkOrderOperation } from "@/domain/mes/enterprise/entities/work-order-operation";
 
 export class InMemoryWorkOrderOperationRepository
   implements WorkOrderOperationRepository
 {
-  constructor(private productionReportRepository: ProductionReportRepository) {}
+  constructor(
+    private productionReportRepository: ProductionReportRepository,
+    private setupReportRepository: SetupReportRepository
+  ) {}
 
   public items: WorkOrderOperation[] = [];
 
@@ -35,6 +39,12 @@ export class InMemoryWorkOrderOperationRepository
     const productionReports =
       workOrderOperation.productionReports.getNewItems();
 
-    await this.productionReportRepository.createMany(productionReports);
+    const setupReports = workOrderOperation.setupReports.getNewItems();
+
+    if (productionReports.length > 0)
+      await this.productionReportRepository.createMany(productionReports);
+
+    if (setupReports.length > 0)
+      await this.setupReportRepository.createMany(setupReports);
   }
 }

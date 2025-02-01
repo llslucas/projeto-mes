@@ -2,6 +2,7 @@ import { AggregateRoot } from "@/core/entities/aggregate-root";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 import { ProductionReportList } from "./production-report-list";
+import { SetupReportList } from "./setup-report-list";
 
 export interface WorkOrderOperationProps {
   workOrderId: UniqueEntityId;
@@ -10,6 +11,7 @@ export interface WorkOrderOperationProps {
   quantity: number;
   balance: number;
   productionReports: ProductionReportList;
+  setupReports: SetupReportList;
   productionBegin?: Date | null;
   productionEnd?: Date | null;
   createdAt: Date;
@@ -20,7 +22,7 @@ export class WorkOrderOperation extends AggregateRoot<WorkOrderOperationProps> {
   static create(
     props: Optional<
       WorkOrderOperationProps,
-      "createdAt" | "balance" | "productionReports"
+      "createdAt" | "balance" | "productionReports" | "setupReports"
     >,
     id?: UniqueEntityId
   ): WorkOrderOperation {
@@ -31,6 +33,7 @@ export class WorkOrderOperation extends AggregateRoot<WorkOrderOperationProps> {
         balance: props.balance ?? props.quantity,
         productionReports:
           props.productionReports ?? new ProductionReportList(),
+        setupReports: props.setupReports ?? new SetupReportList(),
       },
       id
     );
@@ -58,6 +61,10 @@ export class WorkOrderOperation extends AggregateRoot<WorkOrderOperationProps> {
 
   get productionReports(): ProductionReportList {
     return this.props.productionReports;
+  }
+
+  get setupReports(): SetupReportList {
+    return this.props.setupReports;
   }
 
   get createdAt(): Date {
