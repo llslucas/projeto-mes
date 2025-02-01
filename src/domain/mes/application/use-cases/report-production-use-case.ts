@@ -8,13 +8,13 @@ import { WorkOrderOperationRepository } from "../repositories/work-order-operati
 import { NotAllowedError } from "@/core/errors/not-allowed-error";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { WorkOrderOperation } from "../../enterprise/entities/work-order-operation";
+import dayjs from "dayjs";
 
 interface ReportProductionUseCaseRequest {
   workOrderOperationId: string;
   machineId: string;
   machineOperatorId: string;
   reportTime: Date;
-  elapsedTimeInSeconds: number;
   partsReported: number;
   scrapsReported: number;
 }
@@ -39,7 +39,6 @@ export class ReportProductionUseCase {
     machineId,
     machineOperatorId,
     reportTime,
-    elapsedTimeInSeconds,
     partsReported,
     scrapsReported,
   }: ReportProductionUseCaseRequest): Promise<ReportProductionUseCaseResponse> {
@@ -79,6 +78,10 @@ export class ReportProductionUseCase {
     if (partsReported > workOrderOperation.balance) {
       return left(new NotAllowedError());
     }
+
+    const startOfSetup = dayjs(machine.lastReportTime);
+    const endOfSetup = dayjs(reportTime);
+    const elapsedTimeInSeconds = endOfSetup.diff(startOfSetup, "seconds");
 
     const productionReport = ProductionReport.create({
       machineId: new UniqueEntityId(machineId),

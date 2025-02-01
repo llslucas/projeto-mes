@@ -25,7 +25,17 @@ describe("Create production report use case", () => {
   let machineOperator: MachineOperator;
   let workOrderOperation: WorkOrderOperation;
 
+  beforeAll(() => {
+    vi.useFakeTimers();
+  });
+
+  afterAll(() => {
+    vi.useRealTimers();
+  });
+
   beforeEach(async () => {
+    vi.setSystemTime(new Date(2025, 0, 1, 13));
+
     productionReportRepository = new InMemoryProductionReportRepository();
     setupReportRepository = new InMemorySetupReportRepository();
     workOrderOperationRepository = new InMemoryWorkOrderOperationRepository(
@@ -46,8 +56,23 @@ describe("Create production report use case", () => {
     machine = makeMachine({
       machineOperatorId: machineOperator.id,
       workOrderOperationId: workOrderOperation.id,
-      status: "Produzindo",
     });
+
+    const startProductionReport = makeProductionReport({
+      workOrderOperationId: workOrderOperation.id,
+      machineId: machine.id,
+      machineOperatorId: machineOperator.id,
+      type: "Production start",
+      partsReported: null,
+      scrapsReported: null,
+      elapsedTimeInSeconds: null,
+    });
+
+    workOrderOperation.productionReports.add(startProductionReport);
+
+    machine.status = "Produzindo";
+    machine.lastReportId = startProductionReport.id;
+    machine.lastReportTime = startProductionReport.reportTime;
 
     machineOperatorRepository.items.push(machineOperator);
     workOrderOperationRepository.items.push(workOrderOperation);
@@ -67,7 +92,6 @@ describe("Create production report use case", () => {
       machineId: productionReport.machineId.toString(),
       machineOperatorId: productionReport.machineOperatorId.toString(),
       reportTime: productionReport.reportTime,
-      elapsedTimeInSeconds: productionReport.elapsedTimeInSeconds,
       partsReported: productionReport.partsReported,
       scrapsReported: productionReport.scrapsReported,
     });
@@ -80,17 +104,46 @@ describe("Create production report use case", () => {
       const newWorkOrderOperation = result.value.workOrderOperation;
       const workOrderOperationInRepository =
         workOrderOperationRepository.items[0];
-      const productionReportInRepository = productionReportRepository.items[0];
 
       expect(newWorkOrderOperation).toEqual(workOrderOperationInRepository);
 
       expect(
         workOrderOperationInRepository.productionReports.currentItems
-      ).toHaveLength(1);
+      ).toHaveLength(2);
+    }
+  });
 
-      expect(productionReportInRepository).toEqual(
-        workOrderOperationInRepository.productionReports.currentItems[0]
-      );
+  it("should register the end of setup with accurate elapsed time in seconds", async () => {
+    vi.setSystemTime(new Date(2025, 0, 1, 13, 5));
+
+    const productionReport = makeProductionReport({
+      workOrderOperationId: workOrderOperation.id,
+      machineId: machine.id,
+      machineOperatorId: machineOperator.id,
+      partsReported: workOrderOperation.quantity,
+    });
+
+    const result = await sut.execute({
+      workOrderOperationId: productionReport.workOrderOperationId.toString(),
+      machineId: productionReport.machineId.toString(),
+      machineOperatorId: productionReport.machineOperatorId.toString(),
+      reportTime: productionReport.reportTime,
+      partsReported: productionReport.partsReported,
+      scrapsReported: productionReport.scrapsReported,
+    });
+
+    const success = result.isRight();
+
+    expect(success).toBe(true);
+
+    if (success) {
+      const workOrderOperationInRepository =
+        workOrderOperationRepository.items[0];
+
+      const productionReport =
+        workOrderOperationInRepository.productionReports.getItems()[1];
+
+      expect(productionReport.elapsedTimeInSeconds).toEqual(300);
     }
   });
 
@@ -105,7 +158,6 @@ describe("Create production report use case", () => {
       machineId: productionReport.machineId.toString(),
       machineOperatorId: productionReport.machineOperatorId.toString(),
       reportTime: productionReport.reportTime,
-      elapsedTimeInSeconds: productionReport.elapsedTimeInSeconds,
       partsReported: productionReport.partsReported,
       scrapsReported: productionReport.scrapsReported,
     });
@@ -131,7 +183,6 @@ describe("Create production report use case", () => {
       machineId: productionReport.machineId.toString(),
       machineOperatorId: productionReport.machineOperatorId.toString(),
       reportTime: productionReport.reportTime,
-      elapsedTimeInSeconds: productionReport.elapsedTimeInSeconds,
       partsReported: productionReport.partsReported,
       scrapsReported: productionReport.scrapsReported,
     });
@@ -157,7 +208,6 @@ describe("Create production report use case", () => {
       machineId: productionReport.machineId.toString(),
       machineOperatorId: productionReport.machineOperatorId.toString(),
       reportTime: productionReport.reportTime,
-      elapsedTimeInSeconds: productionReport.elapsedTimeInSeconds,
       partsReported: productionReport.partsReported,
       scrapsReported: productionReport.scrapsReported,
     });
@@ -184,7 +234,6 @@ describe("Create production report use case", () => {
       machineId: productionReport.machineId.toString(),
       machineOperatorId: productionReport.machineOperatorId.toString(),
       reportTime: productionReport.reportTime,
-      elapsedTimeInSeconds: productionReport.elapsedTimeInSeconds,
       partsReported: productionReport.partsReported,
       scrapsReported: productionReport.scrapsReported,
     });
@@ -214,7 +263,6 @@ describe("Create production report use case", () => {
       machineId: productionReport.machineId.toString(),
       machineOperatorId: productionReport.machineOperatorId.toString(),
       reportTime: productionReport.reportTime,
-      elapsedTimeInSeconds: productionReport.elapsedTimeInSeconds,
       partsReported: productionReport.partsReported,
       scrapsReported: productionReport.scrapsReported,
     });
@@ -244,7 +292,6 @@ describe("Create production report use case", () => {
       machineId: productionReport.machineId.toString(),
       machineOperatorId: productionReport.machineOperatorId.toString(),
       reportTime: productionReport.reportTime,
-      elapsedTimeInSeconds: productionReport.elapsedTimeInSeconds,
       partsReported: productionReport.partsReported,
       scrapsReported: productionReport.scrapsReported,
     });
@@ -273,7 +320,6 @@ describe("Create production report use case", () => {
       machineId: productionReport.machineId.toString(),
       machineOperatorId: productionReport.machineOperatorId.toString(),
       reportTime: productionReport.reportTime,
-      elapsedTimeInSeconds: productionReport.elapsedTimeInSeconds,
       partsReported: productionReport.partsReported,
       scrapsReported: productionReport.scrapsReported,
     });
