@@ -51,13 +51,6 @@ export class StartSetupUseCase {
       return left(new ResourceNotFoundError("machine"));
     }
 
-    if (
-      machine.workOrderOperationId.toString() !== workOrderOperationId ||
-      machine.status !== "Produzindo"
-    ) {
-      return left(new NotAllowedError());
-    }
-
     const machineOperator =
       await this.machineOperatorRepository.findById(machineOperatorId);
 
@@ -65,7 +58,11 @@ export class StartSetupUseCase {
       return left(new ResourceNotFoundError("machineOperator"));
     }
 
-    if (!machine.machineOperatorId.equals(machineOperator.id)) {
+    if (
+      machine.workOrderOperationId.toString() !== workOrderOperationId ||
+      machine.machineOperatorId.toString() !== machineOperatorId ||
+      machine.status !== "Produzindo"
+    ) {
       return left(new NotAllowedError());
     }
 

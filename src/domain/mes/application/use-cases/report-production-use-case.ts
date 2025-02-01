@@ -20,7 +20,7 @@ interface ReportProductionUseCaseRequest {
 }
 
 type ReportProductionUseCaseResponse = Either<
-  ResourceNotFoundError,
+  ResourceNotFoundError | NotAllowedError,
   {
     workOrderOperation: WorkOrderOperation;
   }
@@ -62,6 +62,18 @@ export class ReportProductionUseCase {
 
     if (!machineOperator) {
       return left(new ResourceNotFoundError("machineOperator"));
+    }
+
+    if (machineOperator.id.toString() !== machineOperatorId) {
+      return left(new NotAllowedError());
+    }
+
+    if (
+      machine.workOrderOperationId.toString() !== workOrderOperationId ||
+      machine.machineOperatorId.toString() !== machineOperatorId ||
+      machine.status !== "Produzindo"
+    ) {
+      return left(new NotAllowedError());
     }
 
     if (partsReported > workOrderOperation.balance) {

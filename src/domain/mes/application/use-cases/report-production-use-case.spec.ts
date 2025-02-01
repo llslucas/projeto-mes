@@ -10,6 +10,9 @@ import { ReportProductionUseCase } from "./report-production-use-case";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { NotAllowedError } from "@/core/errors/not-allowed-error";
 import { InMemorySetupReportRepository } from "test/repositories/in-memory-setup-report-repository";
+import { Machine } from "../../enterprise/entities/machine";
+import { MachineOperator } from "../../enterprise/entities/machine-operator";
+import { WorkOrderOperation } from "../../enterprise/entities/work-order-operation";
 
 describe("Create production report use case", () => {
   let productionReportRepository: InMemoryProductionReportRepository;
@@ -18,6 +21,9 @@ describe("Create production report use case", () => {
   let machineRepository: InMemoryMachineRepository;
   let machineOperatorRepository: InMemoryMachineOperatorRepository;
   let sut: ReportProductionUseCase;
+  let machine: Machine;
+  let machineOperator: MachineOperator;
+  let workOrderOperation: WorkOrderOperation;
 
   beforeEach(async () => {
     productionReportRepository = new InMemoryProductionReportRepository();
@@ -34,18 +40,21 @@ describe("Create production report use case", () => {
       machineRepository,
       machineOperatorRepository
     );
+
+    machineOperator = makeMachineOperator();
+    workOrderOperation = makeWorkOrderOperation();
+    machine = makeMachine({
+      machineOperatorId: machineOperator.id,
+      workOrderOperationId: workOrderOperation.id,
+      status: "Produzindo",
+    });
+
+    machineOperatorRepository.items.push(machineOperator);
+    workOrderOperationRepository.items.push(workOrderOperation);
+    machineRepository.items.push(machine);
   });
 
   it("should create a production report", async () => {
-    const machine = makeMachine();
-    machineRepository.items.push(machine);
-
-    const machineOperator = makeMachineOperator();
-    machineOperatorRepository.items.push(machineOperator);
-
-    const workOrderOperation = makeWorkOrderOperation();
-    workOrderOperationRepository.items.push(workOrderOperation);
-
     const productionReport = makeProductionReport({
       workOrderOperationId: workOrderOperation.id,
       machineId: machine.id,
@@ -86,12 +95,6 @@ describe("Create production report use case", () => {
   });
 
   it("should return a ResourceNotFound error when the work order operation does not exists.", async () => {
-    const machine = makeMachine();
-    machineRepository.items.push(machine);
-
-    const machineOperator = makeMachineOperator();
-    machineOperatorRepository.items.push(machineOperator);
-
     const productionReport = makeProductionReport({
       machineId: machine.id,
       machineOperatorId: machineOperator.id,
@@ -117,12 +120,6 @@ describe("Create production report use case", () => {
   });
 
   it("should return a ResourceNotFound error when the machine does not exists.", async () => {
-    const machineOperator = makeMachineOperator();
-    machineOperatorRepository.items.push(machineOperator);
-
-    const workOrderOperation = makeWorkOrderOperation();
-    workOrderOperationRepository.items.push(workOrderOperation);
-
     const productionReport = makeProductionReport({
       workOrderOperationId: workOrderOperation.id,
       machineOperatorId: machineOperator.id,
@@ -149,12 +146,6 @@ describe("Create production report use case", () => {
   });
 
   it("should return a ResourceNotFound error when the machine operator does not exists.", async () => {
-    const machine = makeMachine();
-    machineRepository.items.push(machine);
-
-    const workOrderOperation = makeWorkOrderOperation();
-    workOrderOperationRepository.items.push(workOrderOperation);
-
     const productionReport = makeProductionReport({
       workOrderOperationId: workOrderOperation.id,
       machineId: machine.id,
@@ -181,20 +172,100 @@ describe("Create production report use case", () => {
   });
 
   it("should return a NotAllowedError error when number of parts reported is bigger than the operation balance", async () => {
-    const machine = makeMachine();
-    machineRepository.items.push(machine);
-
-    const machineOperator = makeMachineOperator();
-    machineOperatorRepository.items.push(machineOperator);
-
-    const workOrderOperation = makeWorkOrderOperation();
-    workOrderOperationRepository.items.push(workOrderOperation);
-
     const productionReport = makeProductionReport({
       workOrderOperationId: workOrderOperation.id,
       machineId: machine.id,
       machineOperatorId: machineOperator.id,
       partsReported: workOrderOperation.quantity + 1,
+    });
+
+    const result = await sut.execute({
+      workOrderOperationId: productionReport.workOrderOperationId.toString(),
+      machineId: productionReport.machineId.toString(),
+      machineOperatorId: productionReport.machineOperatorId.toString(),
+      reportTime: productionReport.reportTime,
+      elapsedTimeInSeconds: productionReport.elapsedTimeInSeconds,
+      partsReported: productionReport.partsReported,
+      scrapsReported: productionReport.scrapsReported,
+    });
+
+    const error = result.isLeft();
+
+    expect(error).toBe(true);
+
+    if (error) {
+      expect(result.value).toBeInstanceOf(NotAllowedError);
+    }
+  });
+
+  it("should return a NotAllowedError error when the machine operator is different than the actual on machine", async () => {
+    const fakeMachineOperator = makeMachineOperator();
+    machineOperatorRepository.items.push(fakeMachineOperator);
+
+    const productionReport = makeProductionReport({
+      workOrderOperationId: workOrderOperation.id,
+      machineId: machine.id,
+      machineOperatorId: fakeMachineOperator.id,
+      partsReported: workOrderOperation.quantity,
+    });
+
+    const result = await sut.execute({
+      workOrderOperationId: productionReport.workOrderOperationId.toString(),
+      machineId: productionReport.machineId.toString(),
+      machineOperatorId: productionReport.machineOperatorId.toString(),
+      reportTime: productionReport.reportTime,
+      elapsedTimeInSeconds: productionReport.elapsedTimeInSeconds,
+      partsReported: productionReport.partsReported,
+      scrapsReported: productionReport.scrapsReported,
+    });
+
+    const error = result.isLeft();
+
+    expect(error).toBe(true);
+
+    if (error) {
+      expect(result.value).toBeInstanceOf(NotAllowedError);
+    }
+  });
+
+  it("should return a NotAllowedError error when the work order operation is different than the actual on machine", async () => {
+    const fakeWorkOrderOperation = makeWorkOrderOperation();
+    workOrderOperationRepository.items.push(fakeWorkOrderOperation);
+
+    const productionReport = makeProductionReport({
+      workOrderOperationId: fakeWorkOrderOperation.id,
+      machineId: machine.id,
+      machineOperatorId: machineOperator.id,
+      partsReported: workOrderOperation.quantity,
+    });
+
+    const result = await sut.execute({
+      workOrderOperationId: productionReport.workOrderOperationId.toString(),
+      machineId: productionReport.machineId.toString(),
+      machineOperatorId: productionReport.machineOperatorId.toString(),
+      reportTime: productionReport.reportTime,
+      elapsedTimeInSeconds: productionReport.elapsedTimeInSeconds,
+      partsReported: productionReport.partsReported,
+      scrapsReported: productionReport.scrapsReported,
+    });
+
+    const error = result.isLeft();
+
+    expect(error).toBe(true);
+
+    if (error) {
+      expect(result.value).toBeInstanceOf(NotAllowedError);
+    }
+  });
+
+  it("should return a NotAllowedError error when the machine status is different than Produzindo", async () => {
+    machineRepository.items[0].status = "Fora de produção";
+
+    const productionReport = makeProductionReport({
+      workOrderOperationId: workOrderOperation.id,
+      machineId: machine.id,
+      machineOperatorId: machineOperator.id,
+      partsReported: workOrderOperation.quantity,
     });
 
     const result = await sut.execute({
