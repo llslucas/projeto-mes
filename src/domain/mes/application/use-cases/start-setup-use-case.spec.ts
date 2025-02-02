@@ -28,7 +28,6 @@ describe("Start setup use case", () => {
 
   beforeEach(async () => {
     setupReportRepository = new InMemorySetupReportRepository();
-    setupReportRepository = new InMemorySetupReportRepository();
     workOrderOperationRepository = new InMemoryWorkOrderOperationRepository(
       productionReportRepository,
       setupReportRepository
