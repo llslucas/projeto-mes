@@ -17,7 +17,7 @@ interface StartSetupUseCaseRequest {
 }
 
 type StartSetupUseCaseResponse = Either<
-  ResourceNotFoundError,
+  ResourceNotFoundError | NotAllowedError,
   {
     workOrderOperation: WorkOrderOperation;
   }
