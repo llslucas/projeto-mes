@@ -4,7 +4,7 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 export interface ReportProps {
   machineId: UniqueEntityId;
   machineOperatorId: UniqueEntityId;
-  workOrderOperationId: UniqueEntityId;
+  workOrderOperationId?: UniqueEntityId | null;
   reportTime: Date;
   elapsedTimeInSeconds?: number | null;
   createdAt: Date;
