@@ -12,3 +12,124 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Sector {
+  id          String    @id @unique @default(uuid())
+  name        String
+  description String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime?
+
+  MachineOperator MachineOperator[]
+  Machine         Machine[]
+}
+
+enum MachineOperatorLevel {
+  WORKER
+  LEADER
+}
+
+model MachineOperator {
+  id        String               @id @unique @default(uuid())
+  number    String
+  name      String
+  level     MachineOperatorLevel
+  sectorId  String
+  createdAt DateTime             @default(now())
+  updatedAt DateTime?
+
+  sector   Sector    @relation(fields: [sectorId], references: [id])
+  machines Machine[]
+  reports  Report[]
+}
+
+enum MachineStatus {
+  FORA_DE_PRODUCAO
+  PRODUZINDO
+  EM_SETUP
+  EM_MANUTENCAO
+  FORA_DE_TURNO
+}
+
+model Machine {
+  id                   String        @id @unique @default(uuid())
+  name                 String
+  description          String
+  sectorId             String
+  status               MachineStatus
+  workOrderOperationId String?
+  machineOperatorId    String?
+  lastReportId         String?
+  lastReportTime       DateTime?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime?
+
+  sector             Sector              @relation(fields: [sectorId], references: [id])
+  machineOperator    MachineOperator?    @relation(fields: [machineOperatorId], references: [id])
+  workOrderOperation WorkOrderOperation? @relation(fields: [workOrderOperationId], references: [id])
+  reports            Report[]
+}
+
+model SellOrder {
+  id           String    @id @unique @default(uuid())
+  number       Int
+  clientName   String
+  sellerName   String
+  status       String
+  emissionDate DateTime
+  deliveryDate DateTime
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
+
+  WorkOrder WorkOrder[]
+}
+
+model WorkOrder {
+  id                 String    @id @unique @default(uuid())
+  number             Int
+  sellOrderId        String?
+  status             String
+  deliveryDate       DateTime
+  productName        String
+  productDescription String
+  comments           String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime? @updatedAt
+
+  SellOrder          SellOrder?           @relation(fields: [sellOrderId], references: [id])
+  WorkOrderOperation WorkOrderOperation[]
+}
+
+model WorkOrderOperation {
+  id              String    @id @unique @default(uuid())
+  workOrderId     String
+  number          Int
+  description     String
+  quantity        Int
+  balance         Int
+  productionBegin DateTime?
+  productionEnd   DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime? @updatedAt
+
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id])
+  reports   Report[]
+  machine   Machine[]
+}
+
+model Report {
+  id                   String    @id @unique @default(uuid())
+  machineId            String
+  machineOperatorId    String
+  workOrderOperationId String?
+  setupOperatorId      String?
+  reportTime           DateTime
+  elapsedTimeInSeconds Int
+  type                 String
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime? @updatedAt
+
+  machine            Machine             @relation(fields: [machineId], references: [id])
+  workOrderOperation WorkOrderOperation? @relation(fields: [workOrderOperationId], references: [id])
+  machineOperator    MachineOperator     @relation(fields: [machineOperatorId], references: [id])
+}

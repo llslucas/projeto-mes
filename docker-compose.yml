@@ -7,14 +7,14 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: docker
-      POSTGRES_DB: nest-clean
+      POSTGRES_DB: mway-mes
       PGDATA: /data/postgres
     volumes:
       - ./data/pg:/data/postgres
-  cache:
-    container_name: mway-mes-cache
-    image: redis
-    ports:
-      - 6379:6379
-    volumes:
-      - ./data/redis:/data
+  # cache:
+  #   container_name: mway-mes-cache
+  #   image: redis
+  #   ports:
+  #     - 6379:6379
+  #   volumes:
+  #     - ./data/redis:/data
