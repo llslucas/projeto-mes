@@ -25,6 +25,20 @@ export class InMemoryWorkOrderOperationRepository
     return workOrderOperation;
   }
 
+  async findManyByWorkOrderId(
+    workOrderId: string
+  ): Promise<WorkOrderOperation[] | null> {
+    const workOrderOperations = this.items.filter((workOrderOperation) => {
+      return workOrderOperation.workOrderId.toString() === workOrderId;
+    });
+
+    if (workOrderOperations.length === 0) {
+      return null;
+    }
+
+    return workOrderOperations;
+  }
+
   async create(workOrderOperation: WorkOrderOperation) {
     this.items.push(workOrderOperation);
   }

@@ -5,6 +5,10 @@ export abstract class WorkOrderOperationRepository {
     workOrderOperationId: string
   ): Promise<WorkOrderOperation | null>;
 
+  abstract findManyByWorkOrderId(
+    workOrderId: string
+  ): Promise<WorkOrderOperation[] | null>;
+
   abstract create(workOrderOperation: WorkOrderOperation): Promise<void>;
 
   abstract save(workOrderOperation: WorkOrderOperation): Promise<void>;
