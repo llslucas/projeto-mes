@@ -6,8 +6,26 @@ export class InMemoryMachineOperatorRepository
 {
   public items: MachineOperator[] = [];
 
-  async findById(machineOperatorId: string): Promise<MachineOperator> {
-    return this.items.find((item) => item.id.toString() === machineOperatorId);
+  async findById(machineOperatorId: string): Promise<MachineOperator | null> {
+    const machineOperator = this.items.find(
+      (item) => item.id.toString() === machineOperatorId
+    );
+
+    if (!machineOperator) {
+      return null;
+    }
+
+    return machineOperator;
+  }
+
+  async findByNumber(number: number): Promise<MachineOperator | null> {
+    const machineOperator = this.items.find((item) => item.number === number);
+
+    if (!machineOperator) {
+      return null;
+    }
+
+    return machineOperator;
   }
 
   async create(machineOperator: MachineOperator) {

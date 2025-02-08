@@ -8,6 +8,7 @@ import { MachineOperatorRepository } from "../repositories/machine-operator-repo
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { SectorRepository } from "../repositories/sector-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { MachineOperatorAlreadyExistsError } from "./errors/machine-operator-already-exists-error";
 
 interface CreateMachineOperatorUseCaseRequest {
   sectorId: UniqueEntityId;
@@ -17,7 +18,7 @@ interface CreateMachineOperatorUseCaseRequest {
 }
 
 type CreateMachineOperatorUseCaseResponse = Either<
-  ResourceNotFoundError,
+  ResourceNotFoundError | MachineOperatorAlreadyExistsError,
   {
     machineOperator: MachineOperator;
   }
@@ -40,6 +41,13 @@ export class CreateMachineOperatorUseCase {
 
     if (!sector) {
       return left(new ResourceNotFoundError());
+    }
+
+    const machineOperatorAlreadyExists =
+      await this.machineOperatorRepository.findByNumber(number);
+
+    if (machineOperatorAlreadyExists) {
+      return left(new MachineOperatorAlreadyExistsError());
     }
 
     const machineOperator = MachineOperator.create({

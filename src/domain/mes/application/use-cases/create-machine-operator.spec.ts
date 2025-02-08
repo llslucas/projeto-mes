@@ -5,6 +5,7 @@ import { InMemorySectorRepository } from "test/repositories/in-memory-sector-rep
 import { makeSector } from "test/factories/make-sector";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
+import { MachineOperatorAlreadyExistsError } from "./errors/machine-operator-already-exists-error";
 
 describe("Create machine operator use case", () => {
   let sectorRepository: InMemorySectorRepository;
@@ -60,6 +61,31 @@ describe("Create machine operator use case", () => {
 
     if (error) {
       expect(result.value).toBeInstanceOf(ResourceNotFoundError);
+    }
+  });
+
+  it("should return an error if the machine operator number already exists", async () => {
+    const sector = makeSector();
+
+    await sectorRepository.create(sector);
+
+    const machineOperator = makeMachineOperator();
+
+    machineOperatorRepository.items.push(machineOperator);
+
+    const result = await sut.execute({
+      sectorId: sector.id,
+      name: machineOperator.name,
+      number: machineOperator.number,
+      level: machineOperator.level,
+    });
+
+    const error = result.isLeft();
+
+    expect(error).toBe(true);
+
+    if (error) {
+      expect(result.value).toBeInstanceOf(MachineOperatorAlreadyExistsError);
     }
   });
 });
