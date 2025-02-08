@@ -16,6 +16,12 @@ export class InMemorySectorRepository implements SectorRepository {
     return sector;
   }
 
+  async fetchByName(search?: string) {
+    if (!search || search === "") return this.items;
+
+    return this.items.filter((item) => item.name.includes(search));
+  }
+
   async create(sector: Sector) {
     this.items.push(sector);
   }
