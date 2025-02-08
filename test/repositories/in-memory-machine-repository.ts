@@ -8,12 +8,20 @@ export class InMemoryMachineRepository implements MachineRepository {
     return this.items.find((item) => item.id.toString() === machineId);
   }
 
+  async findBySectorId(sectorId: string): Promise<Machine[]> {
+    return this.items.filter((item) => item.sectorId.toString() === sectorId);
+  }
+
   async create(machine: Machine) {
     this.items.push(machine);
   }
 
   async save(machine: Machine): Promise<void> {
     const index = this.items.findIndex((item) => item.equals(machine));
-    this.items[index] = machine;
+    if (index !== -1) {
+      this.items[index] = machine;
+    } else {
+      this.items.push(machine);
+    }
   }
 }
