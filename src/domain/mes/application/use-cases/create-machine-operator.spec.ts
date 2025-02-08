@@ -1,6 +1,6 @@
 import { makeMachineOperator } from "test/factories/make-machine-operator";
 import { InMemoryMachineOperatorRepository } from "test/repositories/in-memory-machine-operator-repository";
-import { CreateMachineOperatorUseCase } from "./create-machine-operator-use-case";
+import { CreateMachineOperatorUseCase } from "./create-machine-operator";
 import { InMemorySectorRepository } from "test/repositories/in-memory-sector-repository";
 import { makeSector } from "test/factories/make-sector";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";

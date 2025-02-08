@@ -1,6 +1,6 @@
 import { makeMachine } from "test/factories/make-machine";
 import { InMemoryMachineRepository } from "test/repositories/in-memory-machine-repository";
-import { CreateMachineUseCase } from "./create-machine-use-case";
+import { CreateMachineUseCase } from "./create-machine";
 import { InMemorySectorRepository } from "test/repositories/in-memory-sector-repository";
 import { makeSector } from "test/factories/make-sector";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";

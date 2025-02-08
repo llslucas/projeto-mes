@@ -1,6 +1,6 @@
 import { makeSector } from "test/factories/make-sector";
 import { InMemorySectorRepository } from "test/repositories/in-memory-sector-repository";
-import { CreateSectorUseCase } from "./create-sector-use-case";
+import { CreateSectorUseCase } from "./create-sector";
 
 describe("Create sector use case", () => {
   let sectorRepository: InMemorySectorRepository;

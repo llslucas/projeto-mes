@@ -13,7 +13,7 @@ import { Machine } from "../../enterprise/entities/machine";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { NotAllowedError } from "@/core/errors/not-allowed-error";
-import { EndSetupUseCase } from "./end-setup-use-case";
+import { EndSetupUseCase } from "./end-setup";
 
 describe("End setup use case", () => {
   let productionReportRepository: InMemoryProductionReportRepository;

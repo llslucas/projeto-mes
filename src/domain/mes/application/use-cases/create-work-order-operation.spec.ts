@@ -1,7 +1,7 @@
 import { makeWorkOrder } from "test/factories/make-work-order";
 import { InMemoryWorkOrderRepository } from "test/repositories/in-memory-work-order-repository";
 import { InMemoryWorkOrderOperationRepository } from "test/repositories/in-memory-work-order-operation-repository";
-import { CreateWorkOrderOperationUseCase } from "./create-work-order-operation-use-case";
+import { CreateWorkOrderOperationUseCase } from "./create-work-order-operation";
 import { makeWorkOrderOperation } from "test/factories/make-work-order-operation";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";

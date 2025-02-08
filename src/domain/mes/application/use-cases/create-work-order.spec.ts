@@ -1,6 +1,6 @@
 import { makeWorkOrder } from "test/factories/make-work-order";
 import { InMemoryWorkOrderRepository } from "test/repositories/in-memory-work-order-repository";
-import { CreateWorkOrderUseCase } from "./create-work-order-use-case";
+import { CreateWorkOrderUseCase } from "./create-work-order";
 import { InMemorySellOrderRepository } from "test/repositories/in-memory-sell-order-repository";
 import { makeSellOrder } from "test/factories/make-sell-order";
 

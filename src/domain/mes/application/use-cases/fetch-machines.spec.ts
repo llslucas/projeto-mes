@@ -1,5 +1,5 @@
 import { InMemoryMachineRepository } from "test/repositories/in-memory-machine-repository";
-import { FetchMachinesUseCase } from "./fetch-machines-use-case";
+import { FetchMachinesUseCase } from "./fetch-machines";
 import { makeMachine } from "test/factories/make-machine";
 
 describe("Fetch machines use case", () => {

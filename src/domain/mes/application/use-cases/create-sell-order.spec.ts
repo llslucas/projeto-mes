@@ -1,6 +1,6 @@
 import { makeSellOrder } from "test/factories/make-sell-order";
 import { InMemorySellOrderRepository } from "test/repositories/in-memory-sell-order-repository";
-import { CreateSellOrderUseCase } from "./create-sell-order-use-case";
+import { CreateSellOrderUseCase } from "./create-sell-order";
 
 describe("Create sell order use case", () => {
   let sellOrderRepository: InMemorySellOrderRepository;

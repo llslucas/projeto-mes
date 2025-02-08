@@ -5,26 +5,26 @@ import { makeMachineOperator } from "test/factories/make-machine-operator";
 import { MachineOperator } from "../../enterprise/entities/machine-operator";
 import { Machine } from "../../enterprise/entities/machine";
 import { InMemoryShiftReportRepository } from "test/repositories/in-memory-shift-report-repository";
+import { StartShiftUseCase } from "./start-shift";
 import { makeShiftReport } from "test/factories/make-shift-report";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { NotAllowedError } from "@/core/errors/not-allowed-error";
-import { EndShiftUseCase } from "./end-shift-use-case";
 
-describe("End shift use case", () => {
+describe("Start shift use case", () => {
   let shiftReportRepository: InMemoryShiftReportRepository;
   let machineRepository: InMemoryMachineRepository;
   let machineOperatorRepository: InMemoryMachineOperatorRepository;
   let machineOperator: MachineOperator;
   let machine: Machine;
-  let sut: EndShiftUseCase;
+  let sut: StartShiftUseCase;
 
   beforeEach(async () => {
     shiftReportRepository = new InMemoryShiftReportRepository();
     machineRepository = new InMemoryMachineRepository();
     machineOperatorRepository = new InMemoryMachineOperatorRepository();
 
-    sut = new EndShiftUseCase(
+    sut = new StartShiftUseCase(
       machineRepository,
       machineOperatorRepository,
       shiftReportRepository
@@ -33,16 +33,16 @@ describe("End shift use case", () => {
     machineOperator = makeMachineOperator();
 
     machine = makeMachine({
-      machineOperatorId: machineOperator.id,
+      machineOperatorId: null,
       workOrderOperationId: null,
-      status: "Fora de produção",
+      status: "Fora de turno",
     });
 
     machineOperatorRepository.items.push(machineOperator);
     machineRepository.items.push(machine);
   });
 
-  it("should be able to end a shift", async () => {
+  it("should be able to start a shift", async () => {
     const shiftReport = makeShiftReport({
       machineId: machine.id,
       machineOperatorId: machineOperator.id,
@@ -65,8 +65,8 @@ describe("End shift use case", () => {
       expect(shiftReportInRepository).toBeTruthy();
       expect(machineInRepository).toEqual(
         expect.objectContaining({
-          status: "Fora de turno",
-          machineOperatorId: null,
+          status: "Fora de produção",
+          machineOperatorId: machineOperator.id,
         })
       );
     }
@@ -114,7 +114,7 @@ describe("End shift use case", () => {
     }
   });
 
-  it("should return a NotAllowedError when the machine is not fully stopped", async () => {
+  it("should return a NotAllowedError when the machine is already in use", async () => {
     machineRepository.items[0].machineOperatorId = machineOperator.id;
     machineRepository.items[0].status = "Produzindo";
     machineRepository.items[0].workOrderOperationId = new UniqueEntityId(
