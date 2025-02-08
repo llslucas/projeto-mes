@@ -15,7 +15,7 @@ datasource db {
 
 model Sector {
   id          String    @id @unique @default(uuid())
-  name        String
+  name        String    @unique
   description String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime?
@@ -31,7 +31,7 @@ enum MachineOperatorLevel {
 
 model MachineOperator {
   id        String               @id @unique @default(uuid())
-  number    String
+  number    String               @unique
   name      String
   level     MachineOperatorLevel
   sectorId  String
@@ -53,7 +53,7 @@ enum MachineStatus {
 
 model Machine {
   id                   String        @id @unique @default(uuid())
-  name                 String
+  name                 String        @unique
   description          String
   sectorId             String
   status               MachineStatus
@@ -72,7 +72,7 @@ model Machine {
 
 model SellOrder {
   id           String    @id @unique @default(uuid())
-  number       Int
+  number       Int       @unique
   clientName   String
   sellerName   String
   status       String
@@ -86,7 +86,7 @@ model SellOrder {
 
 model WorkOrder {
   id                 String    @id @unique @default(uuid())
-  number             Int
+  number             Int       @unique
   sellOrderId        String?
   status             String
   deliveryDate       DateTime
