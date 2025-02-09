@@ -111,7 +111,9 @@ model Report {
   workOrderOperationId String?
   setupOperatorId      String?
   reportTime           DateTime
-  elapsedTimeInSeconds Int
+  elapsedTimeInSeconds Int?
+  partsReported        Int?
+  scrapsReported       Int?
   type                 String
   createdAt            DateTime  @default(now())
   updatedAt            DateTime? @updatedAt

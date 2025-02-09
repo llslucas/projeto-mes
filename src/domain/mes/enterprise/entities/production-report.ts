@@ -27,6 +27,10 @@ export class ProductionReport extends Report<ProductionReportProps> {
     );
   }
 
+  get type(): ProductionReportType {
+    return this.props.type;
+  }
+
   get partsReported(): number | null | undefined {
     return this.props.partsReported;
   }
