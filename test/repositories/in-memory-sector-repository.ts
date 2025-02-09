@@ -9,14 +9,18 @@ export class InMemorySectorRepository implements SectorRepository {
       return sector.id.toString() === sectorId;
     });
 
-    if (!sector) {
-      return null;
-    }
-
-    return sector;
+    return sector || null;
   }
 
-  async fetchByName(search?: string) {
+  async findByName(name: string): Promise<Sector | null> {
+    const sector = this.items.find((sector) => {
+      return sector.name === name;
+    });
+
+    return sector || null;
+  }
+
+  async fetchAll(search?: string) {
     if (!search || search === "") return this.items;
 
     return this.items.filter((item) => item.name.includes(search));

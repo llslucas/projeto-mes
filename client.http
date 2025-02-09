@@ -1,0 +1,15 @@
+@baseUrl = http://localhost:3333
+#@auth_token = {{authenticate.response.body.access_token}}
+
+# @name create_sector
+POST {{baseUrl}}/admin/sector
+Content-Type: application/json
+
+{
+  "name": "Teste 4",
+  "description": "Setor criado para fins de teste"
+}
+###
+
+
+

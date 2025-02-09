@@ -15,7 +15,15 @@ export class PrismaSectorRepository implements SectorRepository {
     return sector ? PrismaSectorMapper.toDomain(sector) : null;
   }
 
-  async fetchByName(search?: string): Promise<Sector[]> {
+  async findByName(name: string): Promise<Sector | null> {
+    const sector = await this.prismaService.sector.findUnique({
+      where: { name },
+    });
+
+    return sector ? PrismaSectorMapper.toDomain(sector) : null;
+  }
+
+  async fetchAll(search?: string): Promise<Sector[]> {
     const sectors = await this.prismaService.sector.findMany({
       where: {
         name: {

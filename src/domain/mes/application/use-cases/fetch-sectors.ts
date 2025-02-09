@@ -16,7 +16,7 @@ export class FetchSectorsUseCase {
   async execute({
     search,
   }: FetchSectorsUseCaseRequest = {}): Promise<FetchSectorsUseCaseResponse> {
-    const sectors = await this.sectorRepository.fetchByName(search);
+    const sectors = await this.sectorRepository.fetchAll(search);
 
     return right({ sectors });
   }

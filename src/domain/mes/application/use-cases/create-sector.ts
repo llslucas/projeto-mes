@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { SectorRepository } from "../repositories/sector-repository";
 import { Sector } from "../../enterprise/entities/sector";
-import { Either, right } from "@/core/either";
+import { Either, left, right } from "@/core/either";
+import { SectorAlreadyExistsError } from "./errors/sector-already-exists-error";
 
 interface CreateSectorUseCaseRequest {
   name: string;
@@ -9,7 +10,7 @@ interface CreateSectorUseCaseRequest {
 }
 
 type CreateSectorUseCaseResponse = Either<
-  null,
+  SectorAlreadyExistsError,
   {
     sector: Sector;
   }
@@ -23,6 +24,12 @@ export class CreateSectorUseCase {
     name,
     description,
   }: CreateSectorUseCaseRequest): Promise<CreateSectorUseCaseResponse> {
+    const sectorExists = await this.sectorRepository.findByName(name);
+
+    if (sectorExists) {
+      return left(new SectorAlreadyExistsError());
+    }
+
     const sector = Sector.create({ name, description });
 
     await this.sectorRepository.create(sector);
