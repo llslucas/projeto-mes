@@ -35,8 +35,6 @@ export class AuthenticateMachineOperatorUseCase {
 
     const accessToken = await this.encrypter.encrypt({
       sub: machineOperator.id.toString(),
-      sectorId: machineOperator.sectorId.toString(),
-      level: machineOperator.level,
     });
 
     return right({ accessToken });

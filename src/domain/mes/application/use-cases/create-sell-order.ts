@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { SellOrderRepository } from "../repositories/sell-order-repository";
 import { SellOrder } from "../../enterprise/entities/sell-order";
-import { Either, right } from "@/core/either";
+import { Either, left, right } from "@/core/either";
+import { SellOrderAlreadyExistsError } from "./errors/sell-order-already-exists";
 
 interface CreateSellOrderUseCaseRequest {
   number: number;
@@ -13,7 +14,7 @@ interface CreateSellOrderUseCaseRequest {
 }
 
 type CreateSellOrderUseCaseResponse = Either<
-  null,
+  SellOrderAlreadyExistsError,
   {
     sellOrder: SellOrder;
   }
@@ -31,6 +32,12 @@ export class CreateSellOrderUseCase {
     emissionDate,
     deliveryDate,
   }: CreateSellOrderUseCaseRequest): Promise<CreateSellOrderUseCaseResponse> {
+    const sellOrderExists = await this.sellOrderRepository.findByNumber(number);
+
+    if (sellOrderExists) {
+      return left(new SellOrderAlreadyExistsError());
+    }
+
     const sellOrder = SellOrder.create({
       number,
       clientName,

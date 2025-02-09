@@ -16,6 +16,14 @@ export class PrismaSellOrderRepository implements SellOrderRepository {
     return sellOrder ? PrismaSellOrderMapper.toDomain(sellOrder) : null;
   }
 
+  async findByNumber(sellOrderNumber: number): Promise<SellOrder | null> {
+    const sellOrder = await this.prismaService.sellOrder.findUnique({
+      where: { number: sellOrderNumber },
+    });
+
+    return sellOrder ? PrismaSellOrderMapper.toDomain(sellOrder) : null;
+  }
+
   async create(sellOrder: SellOrder): Promise<void> {
     const data = PrismaSellOrderMapper.toPrisma(sellOrder);
 

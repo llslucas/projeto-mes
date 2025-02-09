@@ -10,6 +10,7 @@ import { CryptografyModule } from "@/infra/cryptografy/cryptografy.module";
 import { CreateSectorController } from "./admin/create-sector.controller";
 import { CreateMachineController } from "./admin/create-machine.controller";
 import { CreateMachineOperatorController } from "./admin/create-machine-operator.controller";
+import { CreateSellOrderController } from "./admin/create-sell-order.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
@@ -17,6 +18,7 @@ import { CreateMachineOperatorController } from "./admin/create-machine-operator
     CreateSectorController,
     CreateMachineController,
     CreateMachineOperatorController,
+    CreateSellOrderController,
   ],
   providers: [
     CreateSectorUseCase,

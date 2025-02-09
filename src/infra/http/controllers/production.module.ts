@@ -12,10 +12,11 @@ import { FetchWorkOrderOperationsUseCase } from "@/domain/mes/application/use-ca
 import { AuthenticateMachineOperatorUseCase } from "@/domain/mes/application/use-cases/authenticate-machine-operator";
 import { DatabaseModule } from "@/infra/database/database.module";
 import { CryptografyModule } from "@/infra/cryptografy/cryptografy.module";
+import { AuthenticateController } from "./production/authenticate.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
-  controllers: [],
+  controllers: [AuthenticateController],
   providers: [
     StartProductionUseCase,
     ReportProductionUseCase,

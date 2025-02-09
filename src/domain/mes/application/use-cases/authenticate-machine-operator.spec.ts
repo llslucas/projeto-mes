@@ -38,8 +38,6 @@ describe("Authenticate machine operator use case", () => {
       expect(result.value).toEqual({
         accessToken: JSON.stringify({
           sub: machineOperator.id.toString(),
-          sectorId: machineOperator.sectorId.toString(),
-          level: machineOperator.level,
         }),
       });
     }
