@@ -12,4 +12,16 @@ Content-Type: application/json
 ###
 
 
+# @name create_machine
+POST {{baseUrl}}/admin/machine
+Content-Type: application/json
+
+{
+  "name": "Test Machine",
+  "description": "Máquina criado para fins de teste",
+  "sectorId": "480005be-b0db-4d6a-b85f-b122bf967571"
+}
+###
+
+
 

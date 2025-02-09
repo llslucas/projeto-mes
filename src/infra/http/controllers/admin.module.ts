@@ -8,10 +8,11 @@ import { CreateWorkOrderOperationUseCase } from "@/domain/mes/application/use-ca
 import { DatabaseModule } from "@/infra/database/database.module";
 import { CryptografyModule } from "@/infra/cryptografy/cryptografy.module";
 import { CreateSectorController } from "./admin/create-sector.controller";
+import { CreateMachineController } from "./admin/create-machine.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
-  controllers: [CreateSectorController],
+  controllers: [CreateSectorController, CreateMachineController],
   providers: [
     CreateSectorUseCase,
     CreateMachineUseCase,

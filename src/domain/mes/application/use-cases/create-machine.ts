@@ -2,12 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { Machine } from "../../enterprise/entities/machine";
 import { Either, left, right } from "@/core/either";
 import { MachineRepository } from "../repositories/machine-repository";
-import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { SectorRepository } from "../repositories/sector-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 
 interface CreateMachineUseCaseRequest {
-  sectorId: UniqueEntityId;
+  sectorId: string;
   name: string;
   description: string;
 }
@@ -37,7 +37,11 @@ export class CreateMachineUseCase {
       return left(new ResourceNotFoundError());
     }
 
-    const machine = Machine.create({ name, description, sectorId });
+    const machine = Machine.create({
+      name,
+      description,
+      sectorId: new UniqueEntityId(sectorId),
+    });
 
     await this.machineRepository.create(machine);
 
