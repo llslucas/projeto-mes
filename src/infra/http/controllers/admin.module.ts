@@ -9,10 +9,15 @@ import { DatabaseModule } from "@/infra/database/database.module";
 import { CryptografyModule } from "@/infra/cryptografy/cryptografy.module";
 import { CreateSectorController } from "./admin/create-sector.controller";
 import { CreateMachineController } from "./admin/create-machine.controller";
+import { CreateMachineOperatorController } from "./admin/create-machine-operator.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
-  controllers: [CreateSectorController, CreateMachineController],
+  controllers: [
+    CreateSectorController,
+    CreateMachineController,
+    CreateMachineOperatorController,
+  ],
   providers: [
     CreateSectorUseCase,
     CreateMachineUseCase,

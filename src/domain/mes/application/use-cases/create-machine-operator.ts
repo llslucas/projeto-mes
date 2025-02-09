@@ -5,13 +5,13 @@ import {
 } from "../../enterprise/entities/machine-operator";
 import { Either, left, right } from "@/core/either";
 import { MachineOperatorRepository } from "../repositories/machine-operator-repository";
-import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { SectorRepository } from "../repositories/sector-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { MachineOperatorAlreadyExistsError } from "./errors/machine-operator-already-exists-error";
+import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 
 interface CreateMachineOperatorUseCaseRequest {
-  sectorId: UniqueEntityId;
+  sectorId: string;
   number: number;
   name: string;
   level: MachineOperatorLevel;
@@ -51,7 +51,7 @@ export class CreateMachineOperatorUseCase {
     }
 
     const machineOperator = MachineOperator.create({
-      sectorId,
+      sectorId: new UniqueEntityId(sectorId),
       number,
       name,
       level,
