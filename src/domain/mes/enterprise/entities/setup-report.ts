@@ -23,6 +23,10 @@ export class SetupReport extends Report<SetupReportProps> {
     );
   }
 
+  get type(): SetupReportType {
+    return this.props.type;
+  }
+
   get setupOperatorId(): undefined | UniqueEntityId | null {
     return this.props.setupOperatorId;
   }
