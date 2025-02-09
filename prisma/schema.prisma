@@ -24,18 +24,13 @@ model Sector {
   Machine         Machine[]
 }
 
-enum MachineOperatorLevel {
-  WORKER
-  LEADER
-}
-
 model MachineOperator {
-  id        String               @id @unique @default(uuid())
-  number    String               @unique
+  id        String    @id @unique @default(uuid())
+  number    Int       @unique
   name      String
-  level     MachineOperatorLevel
+  level     String
   sectorId  String
-  createdAt DateTime             @default(now())
+  createdAt DateTime  @default(now())
   updatedAt DateTime?
 
   sector   Sector    @relation(fields: [sectorId], references: [id])
