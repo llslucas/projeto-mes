@@ -1,4 +1,4 @@
-import { Sector as PrismaSector } from "@prisma/client";
+import { Prisma, Sector as PrismaSector } from "@prisma/client";
 import { Sector } from "@/domain/mes/enterprise/entities/sector";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 
@@ -17,5 +17,13 @@ export class PrismaSectorMapper {
       },
       new UniqueEntityId(raw.id)
     );
+  }
+
+  static toPrisma(sector: Sector): Prisma.SectorUncheckedCreateInput {
+    return {
+      id: sector.id.toString(),
+      name: sector.name,
+      description: sector.description,
+    };
   }
 }

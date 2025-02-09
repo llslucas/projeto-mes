@@ -29,12 +29,10 @@ export class PrismaSectorRepository implements SectorRepository {
   }
 
   async create(sector: Sector): Promise<void> {
+    const data = PrismaSectorMapper.toPrisma(sector);
+
     await this.prismaService.sector.create({
-      data: {
-        id: sector.id.toString(),
-        name: sector.name,
-        description: sector.description,
-      },
+      data,
     });
   }
 }
