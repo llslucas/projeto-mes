@@ -43,25 +43,17 @@ model MachineOperator {
   reports  Report[]
 }
 
-enum MachineStatus {
-  FORA_DE_PRODUCAO
-  PRODUZINDO
-  EM_SETUP
-  EM_MANUTENCAO
-  FORA_DE_TURNO
-}
-
 model Machine {
-  id                   String        @id @unique @default(uuid())
-  name                 String        @unique
+  id                   String    @id @unique @default(uuid())
+  name                 String    @unique
   description          String
   sectorId             String
-  status               MachineStatus
+  status               String
   workOrderOperationId String?
   machineOperatorId    String?
   lastReportId         String?
   lastReportTime       DateTime?
-  createdAt            DateTime      @default(now())
+  createdAt            DateTime  @default(now())
   updatedAt            DateTime?
 
   sector             Sector              @relation(fields: [sectorId], references: [id])

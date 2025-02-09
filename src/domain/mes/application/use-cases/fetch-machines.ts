@@ -16,7 +16,7 @@ export class FetchMachinesUseCase {
   async execute({
     sectorId,
   }: FetchMachinesUseCaseRequest): Promise<FetchMachinesUseCaseResponse> {
-    const machines = await this.machineRepository.findBySectorId(sectorId);
+    const machines = await this.machineRepository.findManyBySectorId(sectorId);
 
     return right({ machines });
   }

@@ -8,7 +8,7 @@ export class InMemoryMachineRepository implements MachineRepository {
     return this.items.find((item) => item.id.toString() === machineId);
   }
 
-  async findBySectorId(sectorId: string): Promise<Machine[]> {
+  async findManyBySectorId(sectorId: string): Promise<Machine[]> {
     return this.items.filter((item) => item.sectorId.toString() === sectorId);
   }
 
