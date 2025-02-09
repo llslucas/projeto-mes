@@ -7,7 +7,7 @@ export abstract class WorkOrderOperationRepository {
 
   abstract findManyByWorkOrderId(
     workOrderId: string
-  ): Promise<WorkOrderOperation[] | null>;
+  ): Promise<WorkOrderOperation[]>;
 
   abstract create(workOrderOperation: WorkOrderOperation): Promise<void>;
 
