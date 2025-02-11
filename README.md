@@ -19,4 +19,6 @@ RF
 [ ] Deve ser possível anexar arquivos às ordens de produção
 
 
+[ ] Implementar validações do zod para números máximos e mínimos
+
 

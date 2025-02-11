@@ -12,7 +12,7 @@ export function makeMachineOperator(
   const machineOperator = MachineOperator.create(
     {
       sectorId: new UniqueEntityId(),
-      number: faker.number.int(),
+      number: faker.number.int({ min: 1, max: 999 }),
       name: faker.lorem.word(),
       ...override,
     },

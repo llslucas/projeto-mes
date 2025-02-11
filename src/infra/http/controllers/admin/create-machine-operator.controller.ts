@@ -17,7 +17,7 @@ export type createMachineOperatorBodySchema = z.infer<
   typeof createMachineOperatorBodySchema
 >;
 
-@Controller("/machine-operator")
+@Controller("/machine-operators")
 export class CreateMachineOperatorController {
   constructor(private createMachineOperator: CreateMachineOperatorUseCase) {}
 

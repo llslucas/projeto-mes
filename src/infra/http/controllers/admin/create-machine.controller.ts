@@ -14,7 +14,7 @@ const validationPipe = new ZodValidationPipe(createMachineBodySchema);
 
 export type createMachineBodySchema = z.infer<typeof createMachineBodySchema>;
 
-@Controller("/machine")
+@Controller("/machines")
 export class CreateMachineController {
   constructor(private createMachine: CreateMachineUseCase) {}
 

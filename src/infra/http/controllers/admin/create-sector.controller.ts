@@ -13,7 +13,7 @@ const validationPipe = new ZodValidationPipe(createSectorBodySchema);
 
 export type createSectorBodySchema = z.infer<typeof createSectorBodySchema>;
 
-@Controller("/sector")
+@Controller("/sectors")
 export class CreateSectorController {
   constructor(private createSector: CreateSectorUseCase) {}
 
