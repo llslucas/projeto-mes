@@ -2,13 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { WorkOrder } from "../../enterprise/entities/work-order";
 import { Either, left, right } from "@/core/either";
 import { WorkOrderRepository } from "../repositories/work-order-repository";
-import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { SellOrderRepository } from "../repositories/sell-order-repository";
+import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 
 interface CreateWorkOrderUseCaseRequest {
   number: number;
-  sellOrderId: UniqueEntityId | null;
+  sellOrderId: string | null;
   status: string;
   deliveryDate: Date;
   productName: string;
@@ -51,7 +51,7 @@ export class CreateWorkOrderUseCase {
 
     const workOrder = WorkOrder.create({
       number,
-      sellOrderId,
+      sellOrderId: sellOrderId ? new UniqueEntityId(sellOrderId) : null,
       status,
       deliveryDate,
       productName,

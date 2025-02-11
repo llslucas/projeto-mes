@@ -11,6 +11,7 @@ import { CreateSectorController } from "./admin/create-sector.controller";
 import { CreateMachineController } from "./admin/create-machine.controller";
 import { CreateMachineOperatorController } from "./admin/create-machine-operator.controller";
 import { CreateSellOrderController } from "./admin/create-sell-order.controller";
+import { CreateWorkOrderController } from "./admin/create-work-order.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
@@ -19,6 +20,7 @@ import { CreateSellOrderController } from "./admin/create-sell-order.controller"
     CreateMachineController,
     CreateMachineOperatorController,
     CreateSellOrderController,
+    CreateWorkOrderController,
   ],
   providers: [
     CreateSectorUseCase,

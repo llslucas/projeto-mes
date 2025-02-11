@@ -13,7 +13,7 @@ export function makeWorkOrder(
 
   const workOrder = WorkOrder.create(
     {
-      number: faker.number.int(),
+      number: faker.number.int({ min: 1, max: 999999 }),
       productName: faker.commerce.product(),
       productDescription: faker.commerce.productName(),
       deliveryDate: faker.date.soon({ refDate }),
