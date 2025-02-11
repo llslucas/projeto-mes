@@ -40,7 +40,7 @@ export class CreateWorkOrderOperationUseCase {
     );
 
     if (!workOrder) {
-      return left(new ResourceNotFoundError());
+      return left(new ResourceNotFoundError("workOrder"));
     }
 
     const workOrderOperation = WorkOrderOperation.create({

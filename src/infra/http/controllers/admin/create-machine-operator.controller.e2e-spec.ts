@@ -30,9 +30,11 @@ describe("Create machine operator (E2E)", () => {
 
   test("[POST] /admin/machine-operators", async () => {
     const sector = await sectorFactory.makePrismaSector();
+
     const machine = await machineFactory.makePrismaMachine({
       sectorId: sector.id,
     });
+
     const machineOperator = makeMachineOperator();
 
     const response = await request(app.getHttpServer())
@@ -45,7 +47,7 @@ describe("Create machine operator (E2E)", () => {
       });
 
     if (response.statusCode !== 201) {
-      console.log(response.body.errors);
+      console.log(response.body);
     }
 
     expect(response.statusCode).toBe(201);

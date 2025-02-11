@@ -12,7 +12,7 @@ export function makeWorkOrderOperation(
   const workOrderOperation = WorkOrderOperation.create(
     {
       workOrderId: new UniqueEntityId(),
-      number: faker.number.int(),
+      number: faker.number.int({ min: 0, max: 100 }),
       description: faker.lorem.word(1),
       quantity: faker.number.int({ min: 0, max: 100 }),
       ...override,

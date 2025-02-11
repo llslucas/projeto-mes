@@ -26,6 +26,7 @@ export class PrismaWorkOrderMapper {
 
   static toPrisma(workOrder: WorkOrder): Prisma.WorkOrderUncheckedCreateInput {
     return {
+      id: workOrder.id.toString(),
       sellOrderId: workOrder.sellOrderId
         ? workOrder.sellOrderId.toString()
         : null,
