@@ -23,7 +23,7 @@ describe("Create work order use case", () => {
     const workOrder = makeWorkOrder();
 
     const result = await sut.execute({
-      sellOrderId: sellOrder.id,
+      sellOrderId: sellOrder.id.toString(),
       number: workOrder.number,
       productName: workOrder.productName,
       productDescription: workOrder.productDescription,

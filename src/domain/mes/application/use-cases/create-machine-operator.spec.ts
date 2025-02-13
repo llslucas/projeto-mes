@@ -4,7 +4,6 @@ import { CreateMachineOperatorUseCase } from "./create-machine-operator";
 import { InMemorySectorRepository } from "test/repositories/in-memory-sector-repository";
 import { makeSector } from "test/factories/make-sector";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { MachineOperatorAlreadyExistsError } from "./errors/machine-operator-already-exists-error";
 
 describe("Create machine operator use case", () => {
@@ -29,7 +28,7 @@ describe("Create machine operator use case", () => {
     const machineOperator = makeMachineOperator();
 
     const result = await sut.execute({
-      sectorId: sector.id,
+      sectorId: sector.id.toString(),
       name: machineOperator.name,
       number: machineOperator.number,
       level: machineOperator.level,
@@ -49,7 +48,7 @@ describe("Create machine operator use case", () => {
     const machineOperator = makeMachineOperator();
 
     const result = await sut.execute({
-      sectorId: new UniqueEntityId("Fake sector"),
+      sectorId: "Fake sector",
       name: machineOperator.name,
       number: machineOperator.number,
       level: machineOperator.level,
@@ -74,7 +73,7 @@ describe("Create machine operator use case", () => {
     machineOperatorRepository.items.push(machineOperator);
 
     const result = await sut.execute({
-      sectorId: sector.id,
+      sectorId: sector.id.toString(),
       name: machineOperator.name,
       number: machineOperator.number,
       level: machineOperator.level,

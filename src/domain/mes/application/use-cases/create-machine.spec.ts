@@ -4,7 +4,6 @@ import { CreateMachineUseCase } from "./create-machine";
 import { InMemorySectorRepository } from "test/repositories/in-memory-sector-repository";
 import { makeSector } from "test/factories/make-sector";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
-import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 
 describe("Create machine use case", () => {
   let sectorRepository: InMemorySectorRepository;
@@ -25,7 +24,7 @@ describe("Create machine use case", () => {
     const machine = makeMachine();
 
     const result = await sut.execute({
-      sectorId: sector.id,
+      sectorId: sector.id.toString(),
       name: machine.name,
       description: machine.description,
     });
@@ -44,7 +43,7 @@ describe("Create machine use case", () => {
     const machine = makeMachine();
 
     const result = await sut.execute({
-      sectorId: new UniqueEntityId("Fake Sector"),
+      sectorId: "Fake Sector",
       name: machine.name,
       description: machine.description,
     });
