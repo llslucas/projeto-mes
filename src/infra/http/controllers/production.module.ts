@@ -13,10 +13,11 @@ import { AuthenticateMachineOperatorUseCase } from "@/domain/mes/application/use
 import { DatabaseModule } from "@/infra/database/database.module";
 import { CryptografyModule } from "@/infra/cryptografy/cryptografy.module";
 import { AuthenticateController } from "./production/authenticate.controller";
+import { FetchSectorsController } from "./production/fetch-sector.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
-  controllers: [AuthenticateController],
+  controllers: [AuthenticateController, FetchSectorsController],
   providers: [
     StartProductionUseCase,
     ReportProductionUseCase,
