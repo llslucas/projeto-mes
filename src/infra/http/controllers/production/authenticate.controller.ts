@@ -4,24 +4,24 @@ import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
 import { AuthenticateMachineOperatorUseCase } from "@/domain/mes/application/use-cases/authenticate-machine-operator";
 import { Public } from "@/infra/auth/public";
 
-const createSectorBodySchema = z.object({
+const authenticateBodySchema = z.object({
   number: z.number(),
 });
 
-const validationPipe = new ZodValidationPipe(createSectorBodySchema);
+const validationPipe = new ZodValidationPipe(authenticateBodySchema);
 
-export type createSectorBodySchema = z.infer<typeof createSectorBodySchema>;
+export type authenticateBodySchema = z.infer<typeof authenticateBodySchema>;
 
 @Controller("/sessions")
 export class AuthenticateController {
-  constructor(private createSector: AuthenticateMachineOperatorUseCase) {}
+  constructor(private authenticate: AuthenticateMachineOperatorUseCase) {}
 
   @Post()
   @Public()
-  async handle(@Body(validationPipe) body: createSectorBodySchema) {
+  async handle(@Body(validationPipe) body: authenticateBodySchema) {
     const { number } = body;
 
-    const result = await this.createSector.execute({
+    const result = await this.authenticate.execute({
       number,
     });
 
