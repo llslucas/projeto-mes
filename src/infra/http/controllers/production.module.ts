@@ -14,10 +14,15 @@ import { DatabaseModule } from "@/infra/database/database.module";
 import { CryptografyModule } from "@/infra/cryptografy/cryptografy.module";
 import { AuthenticateController } from "./production/authenticate.controller";
 import { FetchSectorsController } from "./production/fetch-sector.controller";
+import { FetchMachinesController } from "./production/fetch-machines.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
-  controllers: [AuthenticateController, FetchSectorsController],
+  controllers: [
+    AuthenticateController,
+    FetchSectorsController,
+    FetchMachinesController,
+  ],
   providers: [
     StartProductionUseCase,
     ReportProductionUseCase,
