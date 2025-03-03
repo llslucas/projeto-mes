@@ -25,7 +25,7 @@ describe("Create work order operation (E2E)", () => {
     await app.init();
   });
 
-  test("[POST] /work-order-operations", async () => {
+  test("[POST] /work-orders/:workOrderId/operations", async () => {
     const workOrder = await workOrderFactory.makePrismaWorkOrder();
 
     const workOrderOperation = makeWorkOrderOperation({
@@ -33,7 +33,7 @@ describe("Create work order operation (E2E)", () => {
     });
 
     const response = await request(app.getHttpServer())
-      .post("/admin/work-order-operations")
+      .post(`/admin/work-orders/${workOrder.id.toString()}/operations`)
       .send({
         workOrderId: workOrder.id.toString(),
         number: workOrderOperation.number,

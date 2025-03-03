@@ -1,26 +1,43 @@
 import { z } from "zod";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation.pipe";
-import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  Param,
+} from "@nestjs/common";
 import { CreateWorkOrderOperationUseCase } from "@/domain/mes/application/use-cases/create-work-order-operation";
 import { Public } from "@/infra/auth/public";
 
-const createWorkOrderOperationBodySchema = z.object({
+const createWorkOrderOperationParamSchema = z.object({
   workOrderId: z.string().uuid(),
+});
+
+const createWorkOrderOperationBodySchema = z.object({
   number: z.number(),
   description: z.string(),
   quantity: z.number(),
   balance: z.number().optional(),
 });
 
-const validationPipe = new ZodValidationPipe(
+const paramValidationPipe = new ZodValidationPipe(
+  createWorkOrderOperationParamSchema
+);
+
+const bodyValidationPipe = new ZodValidationPipe(
   createWorkOrderOperationBodySchema
 );
 
-export type createWorkOrderOperationBodySchema = z.infer<
+export type CreateWorkOrderOperationParamSchema = z.infer<
+  typeof createWorkOrderOperationParamSchema
+>;
+
+export type CreateWorkOrderOperationBodySchema = z.infer<
   typeof createWorkOrderOperationBodySchema
 >;
 
-@Controller("/work-order-operations")
+@Controller("/work-orders/:workOrderId/operations")
 export class CreateWorkOrderOperationController {
   constructor(
     private createWorkOrderOperation: CreateWorkOrderOperationUseCase
@@ -28,8 +45,12 @@ export class CreateWorkOrderOperationController {
 
   @Post()
   @Public()
-  async handle(@Body(validationPipe) body: createWorkOrderOperationBodySchema) {
-    const { number, description, quantity, balance, workOrderId } = body;
+  async handle(
+    @Param(paramValidationPipe) param: CreateWorkOrderOperationParamSchema,
+    @Body(bodyValidationPipe) body: CreateWorkOrderOperationBodySchema
+  ) {
+    const { workOrderId } = param;
+    const { number, description, quantity, balance } = body;
 
     const result = await this.createWorkOrderOperation.execute({
       workOrderId,
