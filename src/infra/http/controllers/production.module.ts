@@ -15,6 +15,7 @@ import { CryptografyModule } from "@/infra/cryptografy/cryptografy.module";
 import { AuthenticateController } from "./production/authenticate.controller";
 import { FetchSectorsController } from "./production/fetch-sectors.controller";
 import { FetchMachinesController } from "./production/fetch-machines.controller";
+import { FetchWorkOrderOperationsController } from "./production/fetch-work-order-operations.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
@@ -22,6 +23,7 @@ import { FetchMachinesController } from "./production/fetch-machines.controller"
     AuthenticateController,
     FetchSectorsController,
     FetchMachinesController,
+    FetchWorkOrderOperationsController,
   ],
   providers: [
     StartProductionUseCase,

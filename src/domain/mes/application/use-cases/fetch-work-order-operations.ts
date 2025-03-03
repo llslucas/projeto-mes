@@ -6,7 +6,7 @@ import { WorkOrderRepository } from "../repositories/work-order-repository";
 import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 
 interface FetchWorkOrderOperationsUseCaseRequest {
-  workOrderNumber: number;
+  workOrderId: string;
 }
 
 type FetchWorkOrderOperationsUseCaseResponse = Either<
@@ -22,10 +22,9 @@ export class FetchWorkOrderOperationsUseCase {
   ) {}
 
   async execute({
-    workOrderNumber,
+    workOrderId,
   }: FetchWorkOrderOperationsUseCaseRequest): Promise<FetchWorkOrderOperationsUseCaseResponse> {
-    const workOrder =
-      await this.workOrderRepository.findByNumber(workOrderNumber);
+    const workOrder = await this.workOrderRepository.findById(workOrderId);
 
     if (!workOrder) {
       return left(new ResourceNotFoundError("Work Order"));

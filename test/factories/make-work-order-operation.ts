@@ -4,6 +4,9 @@ import {
   WorkOrderOperation,
   WorkOrderOperationProps,
 } from "@/domain/mes/enterprise/entities/work-order-operation";
+import { PrismaService } from "@/infra/database/prisma/prisma.service";
+import { PrismaWorkOrderOperationMapper } from "@/infra/database/prisma/mappers/prisma-work-order-operation-mapper";
+import { Injectable } from "@nestjs/common";
 
 export function makeWorkOrderOperation(
   override: Partial<WorkOrderOperationProps> = {},
@@ -21,4 +24,22 @@ export function makeWorkOrderOperation(
   );
 
   return workOrderOperation;
+}
+
+@Injectable()
+export class WorkOrderOperationFactory {
+  constructor(private prismaService: PrismaService) {}
+
+  async makePrismaWorkOrderOperation(
+    data?: Partial<WorkOrderOperationProps>,
+    id?: UniqueEntityId
+  ) {
+    const workOrderOperation = makeWorkOrderOperation(data, id);
+
+    await this.prismaService.workOrderOperation.create({
+      data: PrismaWorkOrderOperationMapper.toPrisma(workOrderOperation),
+    });
+
+    return workOrderOperation;
+  }
 }
