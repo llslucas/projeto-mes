@@ -27,8 +27,10 @@ export class PrismaShiftReportMapper {
 
   static toPrisma(shiftReport: ShiftReport): Prisma.ReportUncheckedCreateInput {
     return {
-      workOrderOperationId: shiftReport.workOrderOperationId.toString(),
       machineId: shiftReport.machineId.toString(),
+      workOrderOperationId: shiftReport.workOrderOperationId
+        ? shiftReport.workOrderOperationId.toString()
+        : null,
       machineOperatorId: shiftReport.machineOperatorId.toString(),
       type: shiftReport.type,
       reportTime: shiftReport.reportTime,

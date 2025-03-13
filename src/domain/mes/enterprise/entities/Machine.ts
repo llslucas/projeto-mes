@@ -31,7 +31,7 @@ export class Machine extends Entity<MachineProps> {
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
-        status: props.status ?? "Fora de produção",
+        status: props.status ?? "Fora de turno",
       },
       id
     );

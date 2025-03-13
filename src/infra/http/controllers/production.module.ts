@@ -16,6 +16,7 @@ import { AuthenticateController } from "./production/authenticate.controller";
 import { FetchSectorsController } from "./production/fetch-sectors.controller";
 import { FetchMachinesController } from "./production/fetch-machines.controller";
 import { FetchWorkOrderOperationsController } from "./production/fetch-work-order-operations.controller";
+import { StartShiftController } from "./production/start-shift.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
@@ -24,6 +25,7 @@ import { FetchWorkOrderOperationsController } from "./production/fetch-work-orde
     FetchSectorsController,
     FetchMachinesController,
     FetchWorkOrderOperationsController,
+    StartShiftController,
   ],
   providers: [
     StartProductionUseCase,
@@ -37,6 +39,7 @@ import { FetchWorkOrderOperationsController } from "./production/fetch-work-orde
     FetchWorkOrderOperationsUseCase,
     FetchMachinesUseCase,
     AuthenticateMachineOperatorUseCase,
+    StartShiftUseCase,
   ],
 })
 export class ProductionModule {}
