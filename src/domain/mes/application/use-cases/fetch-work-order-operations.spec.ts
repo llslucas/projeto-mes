@@ -47,7 +47,7 @@ describe("Fetch work order operations use case", () => {
     );
 
     const result = await sut.execute({
-      workOrderNumber: workOrder.number,
+      workOrderId: workOrder.id.toString(),
     });
 
     const success = result.isRight();
@@ -67,7 +67,7 @@ describe("Fetch work order operations use case", () => {
     workOrderOperationRepository.items.push(workOrderOperation);
 
     const result = await sut.execute({
-      workOrderNumber: 12345,
+      workOrderId: "Teste",
     });
 
     const error = result.isLeft();
