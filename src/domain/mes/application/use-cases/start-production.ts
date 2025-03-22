@@ -59,6 +59,7 @@ export class StartProductionUseCase {
     }
 
     if (
+      !machine.machineOperatorId ||
       machine.machineOperatorId.toString() !== machineOperatorId ||
       machine.status !== "Fora de produção" ||
       machine.workOrderOperationId

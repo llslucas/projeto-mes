@@ -31,6 +31,7 @@ export class PrismaWorkOrderOperationMapper {
     workOrderOperation: WorkOrderOperation
   ): Prisma.WorkOrderOperationUncheckedCreateInput {
     return {
+      id: workOrderOperation.id ? workOrderOperation.id.toString() : null,
       workOrderId: workOrderOperation.workOrderId.toString(),
       number: workOrderOperation.number,
       description: workOrderOperation.description,

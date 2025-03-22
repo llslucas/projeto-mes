@@ -3,12 +3,18 @@ import { WorkOrderOperation } from "@/domain/mes/enterprise/entities/work-order-
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { PrismaWorkOrderOperationMapper } from "../mappers/prisma-work-order-operation-mapper";
+import { ProductionReportRepository } from "@/domain/mes/application/repositories/production-report-repository";
+import { SetupReportRepository } from "@/domain/mes/application/repositories/setup-report-repository";
 
 @Injectable()
 export class PrismaWorkOrderOperationRepository
   implements WorkOrderOperationRepository
 {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private productionReportRepository: ProductionReportRepository,
+    private setupReportRepository: SetupReportRepository
+  ) {}
   async findById(
     workOrderOperationId: string
   ): Promise<WorkOrderOperation | null> {
@@ -43,6 +49,10 @@ export class PrismaWorkOrderOperationRepository
 
   async save(workOrderOperation: WorkOrderOperation): Promise<void> {
     const data = PrismaWorkOrderOperationMapper.toPrisma(workOrderOperation);
+
+    this.productionReportRepository.createMany(workOrderOperation.productionReports.getNewItems());
+
+    this.setupReportRepository.createMany(workOrderOperation.setupReports.getNewItems());
 
     await this.prismaService.workOrderOperation.update({
       where: { id: workOrderOperation.id.toString() },

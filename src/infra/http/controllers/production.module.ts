@@ -17,6 +17,7 @@ import { FetchSectorsController } from "./production/fetch-sectors.controller";
 import { FetchMachinesController } from "./production/fetch-machines.controller";
 import { FetchWorkOrderOperationsController } from "./production/fetch-work-order-operations.controller";
 import { StartShiftController } from "./production/start-shift.controller";
+import { StartProductionController } from "./production/start-production.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
@@ -26,6 +27,7 @@ import { StartShiftController } from "./production/start-shift.controller";
     FetchMachinesController,
     FetchWorkOrderOperationsController,
     StartShiftController,
+    StartProductionController,
   ],
   providers: [
     StartProductionUseCase,
