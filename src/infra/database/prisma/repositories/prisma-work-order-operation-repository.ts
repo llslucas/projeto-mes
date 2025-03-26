@@ -51,7 +51,6 @@ export class PrismaWorkOrderOperationRepository
     const data = PrismaWorkOrderOperationMapper.toPrisma(workOrderOperation);
 
     this.productionReportRepository.createMany(workOrderOperation.productionReports.getNewItems());
-
     this.setupReportRepository.createMany(workOrderOperation.setupReports.getNewItems());
 
     await this.prismaService.workOrderOperation.update({

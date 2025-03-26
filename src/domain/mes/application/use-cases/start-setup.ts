@@ -38,7 +38,7 @@ export class StartSetupUseCase {
     reportTime,
   }: StartSetupUseCaseRequest): Promise<StartSetupUseCaseResponse> {
     const workOrderOperation = await this.workOrderOperationRepository.findById(
-      workOrderOperationId.toString()
+      workOrderOperationId
     );
 
     if (!workOrderOperation) {
@@ -59,6 +59,7 @@ export class StartSetupUseCase {
     }
 
     if (
+      !machine.workOrderOperationId ||
       machine.workOrderOperationId.toString() !== workOrderOperationId ||
       machine.machineOperatorId.toString() !== machineOperatorId ||
       machine.status !== "Produzindo"
