@@ -20,6 +20,7 @@ import { StartShiftController } from "./production/start-shift.controller";
 import { StartProductionController } from "./production/start-production.controller";
 import { StartSetupController } from "./production/start-setup.controller";
 import { ReportProductionController } from "./production/report-production.controller";
+import { EndSetupController } from "./production/end-setup.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
@@ -31,7 +32,8 @@ import { ReportProductionController } from "./production/report-production.contr
     StartShiftController,
     StartProductionController,
     StartSetupController,
-    ReportProductionController
+    ReportProductionController,
+    EndSetupController,
   ],
   providers: [
     StartProductionUseCase,
