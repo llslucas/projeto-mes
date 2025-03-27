@@ -21,6 +21,7 @@ import { StartProductionController } from "./production/start-production.control
 import { StartSetupController } from "./production/start-setup.controller";
 import { ReportProductionController } from "./production/report-production.controller";
 import { EndSetupController } from "./production/end-setup.controller";
+import { EndProductionController } from "./production/end-production.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
@@ -34,6 +35,7 @@ import { EndSetupController } from "./production/end-setup.controller";
     StartSetupController,
     ReportProductionController,
     EndSetupController,
+    EndProductionController,
   ],
   providers: [
     StartProductionUseCase,
