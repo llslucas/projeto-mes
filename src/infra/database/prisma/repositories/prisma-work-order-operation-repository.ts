@@ -50,8 +50,12 @@ export class PrismaWorkOrderOperationRepository
   async save(workOrderOperation: WorkOrderOperation): Promise<void> {
     const data = PrismaWorkOrderOperationMapper.toPrisma(workOrderOperation);
 
-    this.productionReportRepository.createMany(workOrderOperation.productionReports.getNewItems());
-    this.setupReportRepository.createMany(workOrderOperation.setupReports.getNewItems());
+    await this.productionReportRepository.createMany(
+      workOrderOperation.productionReports.getNewItems()
+    );
+    await this.setupReportRepository.createMany(
+      workOrderOperation.setupReports.getNewItems()
+    );
 
     await this.prismaService.workOrderOperation.update({
       where: { id: workOrderOperation.id.toString() },

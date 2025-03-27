@@ -11,7 +11,7 @@ import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { WorkOrderOperationFactory } from "test/factories/make-work-order-operation";
 import { WorkOrderFactory } from "test/factories/make-work-order";
 
-describe("Start production (E2E)", () => {
+describe("Report production (E2E)", () => {
   let app: INestApplication;
   let jwt: JwtService;
   let sectorFactory: SectorFactory;
@@ -25,13 +25,7 @@ describe("Start production (E2E)", () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [
-        SectorFactory,
-        MachineOperatorFactory,
-        MachineFactory,
-        WorkOrderFactory,
-        WorkOrderOperationFactory,
-      ],
+      providers: [SectorFactory, MachineOperatorFactory, MachineFactory, WorkOrderFactory, WorkOrderOperationFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();
@@ -46,7 +40,7 @@ describe("Start production (E2E)", () => {
     await app.init();
   });
 
-  test("[POST] /machines/:machineId/start-production", async () => {
+  test("[POST] /machines/:machineId/report-production", async () => {
     const sector = await sectorFactory.makePrismaSector({
       name: "Teste 1",
     });
@@ -58,46 +52,50 @@ describe("Start production (E2E)", () => {
 
     accessToken = jwt.sign({
       sub: machineOperator.id.toString(),
+    });    
+
+    const workOrder = await workOrderFactory.makePrismaWorkOrder();
+    const workOrderOperation = await workOrderOperationFactory.makePrismaWorkOrderOperation({
+      workOrderId: workOrder.id,
     });
 
     const machine = await machineFactory.makePrismaMachine({
       sectorId: sector.id,
       machineOperatorId: machineOperator.id,
-      status: "Fora de produção",
+      workOrderOperationId: workOrderOperation.id,
+      status: "Produzindo"
     });
 
-    const workOrder = await workOrderFactory.makePrismaWorkOrder();
-    const workOrderOperation =
-      await workOrderOperationFactory.makePrismaWorkOrderOperation({
-        workOrderId: workOrder.id,
-      });
-
     const response = await request(app.getHttpServer())
-      .post(`/production/machines/${machine.id.toString()}/start-production`)
+      .post(`/production/machines/${machine.id.toString()}/report-production`)
       .auth(accessToken, { type: "bearer" })
       .send({
         workOrderOperationId: workOrderOperation.id.toString(),
         machineOperatorId: machineOperator.id.toString(),
         reportTime: new Date(),
+        partsReported: workOrderOperation.quantity,
+        scrapsReported: 0
       });
 
-    if (response.status !== 201) {
-      console.log(response.body.message);
+    if(response.status !== 201){
+      console.log(response.body.message)
     }
 
     const machineOnDatabase = await prisma.machine.findFirst();
-    const reportOnDatabase = await prisma.report.findFirst();
+    const reportOnDatabase = await prisma.report.findFirst();  
+    const operationOnDatabase = await prisma.workOrderOperation.findFirst();
 
     expect(response.status).toBe(201);
 
     expect(machineOnDatabase).toEqual(
       expect.objectContaining({
         status: "Produzindo",
-        workOrderOperationId: workOrderOperation.id.toString(),
+        workOrderOperationId: workOrderOperation.id.toString()
       })
     );
+    
+    expect(reportOnDatabase.type).toBe("Production report")
 
-    expect(reportOnDatabase.type).toBe("Production start");
+    expect(operationOnDatabase.balance).toBe(0);
   });
 });
-

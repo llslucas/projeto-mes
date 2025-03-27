@@ -19,6 +19,7 @@ import { FetchWorkOrderOperationsController } from "./production/fetch-work-orde
 import { StartShiftController } from "./production/start-shift.controller";
 import { StartProductionController } from "./production/start-production.controller";
 import { StartSetupController } from "./production/start-setup.controller";
+import { ReportProductionController } from "./production/report-production.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
@@ -30,6 +31,7 @@ import { StartSetupController } from "./production/start-setup.controller";
     StartShiftController,
     StartProductionController,
     StartSetupController,
+    ReportProductionController
   ],
   providers: [
     StartProductionUseCase,
