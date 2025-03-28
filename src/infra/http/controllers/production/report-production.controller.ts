@@ -8,17 +8,18 @@ import {
 } from "@nestjs/common";
 import { z } from "zod";
 import { ZodValidationPipe } from "../../pipes/zod-validation.pipe";
+import { CurrentUser } from "@/infra/auth/current-user.decorator";
+import { UserPayload } from "@/infra/auth/jwt.strategy";
 
 const reportProductionControllerParamSchema = z.object({
   machineId: z.string().uuid(),
 });
 
 const reportProductionControllerBodySchema = z.object({
-  machineOperatorId: z.string().uuid(),
   workOrderOperationId: z.string().uuid(),
   reportTime: z.string().datetime(),
   partsReported: z.number().min(0),
-  scrapsReported: z.number().min(0)
+  scrapsReported: z.number().min(0),
 });
 
 const bodyValidationPipe = new ZodValidationPipe(
@@ -43,18 +44,20 @@ export class ReportProductionController {
   @Post()
   async handle(
     @Body(bodyValidationPipe) body: reportProductionControllerBodySchema,
-    @Param(paramValidationPipe) param: reportProductionControllerParamSchema
+    @Param(paramValidationPipe) param: reportProductionControllerParamSchema,
+    @CurrentUser() operator: UserPayload
   ) {
     const { machineId } = param;
-    const { machineOperatorId, workOrderOperationId, reportTime, partsReported, scrapsReported } = body;
+    const { workOrderOperationId, reportTime, partsReported, scrapsReported } =
+      body;
 
     const result = await this.reportProductionUseCase.execute({
       machineId,
       workOrderOperationId,
-      machineOperatorId,
+      machineOperatorId: operator.sub,
       reportTime: new Date(reportTime),
       partsReported,
-      scrapsReported
+      scrapsReported,
     });
 
     if (result.isLeft()) {
@@ -62,3 +65,4 @@ export class ReportProductionController {
     }
   }
 }
+
