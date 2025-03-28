@@ -22,6 +22,7 @@ import { StartSetupController } from "./production/start-setup.controller";
 import { ReportProductionController } from "./production/report-production.controller";
 import { EndSetupController } from "./production/end-setup.controller";
 import { EndProductionController } from "./production/end-production.controller";
+import { EndShiftController } from "./production/end-shift.controller";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
@@ -36,6 +37,7 @@ import { EndProductionController } from "./production/end-production.controller"
     ReportProductionController,
     EndSetupController,
     EndProductionController,
+    EndShiftController,
   ],
   providers: [
     StartProductionUseCase,
