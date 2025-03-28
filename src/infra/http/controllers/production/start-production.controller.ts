@@ -8,13 +8,14 @@ import {
 } from "@nestjs/common";
 import { z } from "zod";
 import { ZodValidationPipe } from "../../pipes/zod-validation.pipe";
+import { CurrentUser } from "@/infra/auth/current-user.decorator";
+import { UserPayload } from "@/infra/auth/jwt.strategy";
 
 const startProductionControllerParamSchema = z.object({
   machineId: z.string().uuid(),
 });
 
 const startProductionControllerBodySchema = z.object({
-  machineOperatorId: z.string().uuid(),
   workOrderOperationId: z.string().uuid(),
   reportTime: z.string().datetime(),
 });
@@ -41,15 +42,16 @@ export class StartProductionController {
   @Post()
   async handle(
     @Body(bodyValidationPipe) body: startProductionControllerBodySchema,
-    @Param(paramValidationPipe) param: startProductionControllerParamSchema
+    @Param(paramValidationPipe) param: startProductionControllerParamSchema,
+    @CurrentUser() operator: UserPayload
   ) {
     const { machineId } = param;
-    const { machineOperatorId, workOrderOperationId, reportTime } = body;
+    const { workOrderOperationId, reportTime } = body;
 
     const result = await this.startProductionUseCase.execute({
       machineId,
       workOrderOperationId,
-      machineOperatorId,
+      machineOperatorId: operator.sub,
       reportTime: new Date(reportTime),
     });
 
@@ -58,3 +60,4 @@ export class StartProductionController {
     }
   }
 }
+
