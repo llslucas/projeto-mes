@@ -8,13 +8,14 @@ import {
 } from "@nestjs/common";
 import { z } from "zod";
 import { ZodValidationPipe } from "../../pipes/zod-validation.pipe";
+import { CurrentUser } from "@/infra/auth/current-user.decorator";
+import { UserPayload } from "@/infra/auth/jwt.strategy";
 
 const endShiftControllerParamSchema = z.object({
   machineId: z.string().uuid(),
 });
 
 const endShiftControllerBodySchema = z.object({
-  machineOperatorId: z.string().uuid(),
   reportTime: z.string().datetime(),
 });
 
@@ -39,14 +40,15 @@ export class EndShiftController {
   @Post()
   async handle(
     @Body(bodyValidationPipe) body: endShiftControllerBodySchema,
-    @Param(paramValidationPipe) param: endShiftControllerParamSchema
+    @Param(paramValidationPipe) param: endShiftControllerParamSchema,
+    @CurrentUser() operator: UserPayload
   ) {
     const { machineId } = param;
-    const { machineOperatorId, reportTime } = body;
+    const { reportTime } = body;
 
     const result = await this.endShiftUseCase.execute({
       machineId,
-      machineOperatorId,
+      machineOperatorId: operator.sub,
       reportTime: new Date(reportTime),
     });
 
