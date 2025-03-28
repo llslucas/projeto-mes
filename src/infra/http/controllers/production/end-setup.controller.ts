@@ -8,6 +8,8 @@ import {
 } from "@nestjs/common";
 import { z } from "zod";
 import { ZodValidationPipe } from "../../pipes/zod-validation.pipe";
+import { CurrentUser } from "@/infra/auth/current-user.decorator";
+import { UserPayload } from "@/infra/auth/jwt.strategy";
 
 const endSetupControllerParamSchema = z.object({
   machineId: z.string().uuid(),
@@ -15,7 +17,6 @@ const endSetupControllerParamSchema = z.object({
 
 const endSetupControllerBodySchema = z.object({
   workOrderOperationId: z.string().uuid(),
-  machineOperatorId: z.string().uuid(),
   reportTime: z.string().datetime(),
 });
 
@@ -40,14 +41,15 @@ export class EndSetupController {
   @Post()
   async handle(
     @Body(bodyValidationPipe) body: endSetupControllerBodySchema,
-    @Param(paramValidationPipe) param: endSetupControllerParamSchema
+    @Param(paramValidationPipe) param: endSetupControllerParamSchema,
+    @CurrentUser() operator: UserPayload
   ) {
     const { machineId } = param;
-    const { workOrderOperationId, machineOperatorId, reportTime } = body;
+    const { workOrderOperationId, reportTime } = body;
 
     const result = await this.endSetupUseCase.execute({
       machineId,
-      machineOperatorId,
+      machineOperatorId: operator.sub,
       workOrderOperationId,
       reportTime: new Date(reportTime),
     });
