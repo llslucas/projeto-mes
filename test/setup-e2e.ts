@@ -28,6 +28,7 @@ beforeAll(async () => {
   const databaseURL = generateUniqueDatabaseURL(schemaId);
 
   process.env.DATABASE_URL = databaseURL.toString();
+  process.env.PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK = "true";
 
   DomainEvents.shouldRun = false;
 

@@ -58,6 +58,7 @@ describe("End setup (E2E)", () => {
 
     accessToken = jwt.sign({
       sub: machineOperator.id.toString(),
+      role: "OPERATOR",
     });
 
     const workOrder = await workOrderFactory.makePrismaWorkOrder();

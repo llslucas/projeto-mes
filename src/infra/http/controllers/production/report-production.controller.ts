@@ -5,11 +5,14 @@ import {
   Controller,
   Param,
   Post,
+  UseGuards,
 } from "@nestjs/common";
 import { z } from "zod";
 import { ZodValidationPipe } from "../../pipes/zod-validation.pipe";
-import { CurrentUser } from "@/infra/auth/current-user.decorator";
+import { CurrentUser } from "@/infra/auth/decorators/current-user.decorator";
 import { UserPayload } from "@/infra/auth/jwt.strategy";
+import { Roles } from "@/infra/auth/decorators/roles.decorator";
+import { RolesGuard } from "@/infra/auth/guards/roles.guard";
 
 const reportProductionControllerParamSchema = z.object({
   machineId: z.string().uuid(),
@@ -38,10 +41,12 @@ export type reportProductionControllerBodySchema = z.infer<
 >;
 
 @Controller("/machines/:machineId/report-production")
+@UseGuards(RolesGuard)
 export class ReportProductionController {
   constructor(private reportProductionUseCase: ReportProductionUseCase) {}
 
   @Post()
+  @Roles(["OPERATOR"])
   async handle(
     @Body(bodyValidationPipe) body: reportProductionControllerBodySchema,
     @Param(paramValidationPipe) param: reportProductionControllerParamSchema,

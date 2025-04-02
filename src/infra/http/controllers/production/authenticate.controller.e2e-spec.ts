@@ -35,7 +35,7 @@ describe("Create work order (E2E)", () => {
     const response = await request(app.getHttpServer())
       .post("/production/sessions")
       .send({
-        number: machineOperator.number,
+        operatorNumber: machineOperator.number,
       });
 
     if (response.statusCode !== 201) {

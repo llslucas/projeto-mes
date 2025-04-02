@@ -46,6 +46,7 @@ describe("Start shift (E2E)", () => {
 
     accessToken = jwt.sign({
       sub: machineOperator.id.toString(),
+      role: "OPERATOR",
     });
 
     const machine = await machineFactory.makePrismaMachine({
@@ -59,6 +60,10 @@ describe("Start shift (E2E)", () => {
         machineOperatorId: machineOperator.id.toString(),
         reportTime: new Date(),
       });
+
+    if (response.status !== 201) {
+      console.log(response.body.message);
+    }
 
     expect(response.status).toBe(201);
 

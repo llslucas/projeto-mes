@@ -54,6 +54,7 @@ describe("End shift (E2E)", () => {
 
     accessToken = jwt.sign({
       sub: machineOperator.id.toString(),
+      role: "OPERATOR",
     });
 
     const machine = await machineFactory.makePrismaMachine({

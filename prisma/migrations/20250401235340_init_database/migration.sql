@@ -1,8 +1,16 @@
 -- CreateEnum
-CREATE TYPE "MachineOperatorLevel" AS ENUM ('WORKER', 'LEADER');
+CREATE TYPE "USER_ROLES" AS ENUM ('USER', 'ADMIN', 'OPERATOR');
 
--- CreateEnum
-CREATE TYPE "MachineStatus" AS ENUM ('FORA_DE_PRODUCAO', 'PRODUZINDO', 'EM_SETUP', 'EM_MANUTENCAO', 'FORA_DE_TURNO');
+-- CreateTable
+CREATE TABLE "user" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "role" "USER_ROLES" NOT NULL DEFAULT 'USER',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
+
+    CONSTRAINT "user_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Sector" (
@@ -18,9 +26,9 @@ CREATE TABLE "Sector" (
 -- CreateTable
 CREATE TABLE "MachineOperator" (
     "id" TEXT NOT NULL,
-    "number" TEXT NOT NULL,
+    "number" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
-    "level" "MachineOperatorLevel" NOT NULL,
+    "level" TEXT NOT NULL,
     "sectorId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
@@ -34,7 +42,7 @@ CREATE TABLE "Machine" (
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "sectorId" TEXT NOT NULL,
-    "status" "MachineStatus" NOT NULL,
+    "status" TEXT NOT NULL,
     "workOrderOperationId" TEXT,
     "machineOperatorId" TEXT,
     "lastReportId" TEXT,
@@ -100,7 +108,9 @@ CREATE TABLE "Report" (
     "workOrderOperationId" TEXT,
     "setupOperatorId" TEXT,
     "reportTime" TIMESTAMP(3) NOT NULL,
-    "elapsedTimeInSeconds" INTEGER NOT NULL,
+    "elapsedTimeInSeconds" INTEGER,
+    "partsReported" INTEGER,
+    "scrapsReported" INTEGER,
     "type" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
@@ -109,19 +119,37 @@ CREATE TABLE "Report" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "user_id_key" ON "user"("id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Sector_id_key" ON "Sector"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Sector_name_key" ON "Sector"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "MachineOperator_id_key" ON "MachineOperator"("id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "MachineOperator_number_key" ON "MachineOperator"("number");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Machine_id_key" ON "Machine"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Machine_name_key" ON "Machine"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "SellOrder_id_key" ON "SellOrder"("id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "SellOrder_number_key" ON "SellOrder"("number");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "WorkOrder_id_key" ON "WorkOrder"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "WorkOrder_number_key" ON "WorkOrder"("number");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "WorkOrderOperation_id_key" ON "WorkOrderOperation"("id");

@@ -5,11 +5,14 @@ import {
   Controller,
   Param,
   Post,
+  UseGuards,
 } from "@nestjs/common";
 import { z } from "zod";
 import { ZodValidationPipe } from "../../pipes/zod-validation.pipe";
-import { CurrentUser } from "@/infra/auth/current-user.decorator";
+import { CurrentUser } from "@/infra/auth/decorators/current-user.decorator";
 import { UserPayload } from "@/infra/auth/jwt.strategy";
+import { Roles } from "@/infra/auth/decorators/roles.decorator";
+import { RolesGuard } from "@/infra/auth/guards/roles.guard";
 
 const startSetupControllerParamSchema = z.object({
   machineId: z.string().uuid(),
@@ -37,10 +40,12 @@ export type startSetupControllerBodySchema = z.infer<
 >;
 
 @Controller("/machines/:machineId/start-setup")
+@UseGuards(RolesGuard)
 export class StartSetupController {
   constructor(private startSetupUseCase: StartSetupUseCase) {}
 
   @Post()
+  @Roles(["OPERATOR"])
   async handle(
     @Body(bodyValidationPipe) body: startSetupControllerBodySchema,
     @Param(paramValidationPipe) param: startSetupControllerParamSchema,

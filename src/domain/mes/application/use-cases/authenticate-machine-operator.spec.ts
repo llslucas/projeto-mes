@@ -28,7 +28,9 @@ describe("Authenticate machine operator use case", () => {
     const machineOperator = makeMachineOperator();
     await machineOperatorRepository.create(machineOperator);
 
-    const result = await sut.execute({ number: machineOperator.number });
+    const result = await sut.execute({
+      operatorNumber: machineOperator.number,
+    });
 
     const success = result.isRight();
 
@@ -38,6 +40,7 @@ describe("Authenticate machine operator use case", () => {
       expect(result.value).toEqual({
         accessToken: JSON.stringify({
           sub: machineOperator.id.toString(),
+          role: "OPERATOR",
         }),
       });
     }

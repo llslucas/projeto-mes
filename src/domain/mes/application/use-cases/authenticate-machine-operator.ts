@@ -6,7 +6,7 @@ import { Encrypter } from "../cryptografy/encrypter";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
 
 interface AuthenticateMachineOperatorUseCaseRequest {
-  number: number;
+  operatorNumber: number;
 }
 
 type AuthenticateMachineOperatorUseCaseResponse = Either<
@@ -24,10 +24,10 @@ export class AuthenticateMachineOperatorUseCase {
   ) {}
 
   async execute({
-    number,
+    operatorNumber,
   }: AuthenticateMachineOperatorUseCaseRequest): Promise<AuthenticateMachineOperatorUseCaseResponse> {
     const machineOperator =
-      await this.machineOperatorRepository.findByNumber(number);
+      await this.machineOperatorRepository.findByNumber(operatorNumber);
 
     if (!machineOperator) {
       return left(new WrongCredentialsError());
@@ -35,6 +35,7 @@ export class AuthenticateMachineOperatorUseCase {
 
     const accessToken = await this.encrypter.encrypt({
       sub: machineOperator.id.toString(),
+      role: "OPERATOR",
     });
 
     return right({ accessToken });

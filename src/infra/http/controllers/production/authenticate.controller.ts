@@ -5,7 +5,7 @@ import { AuthenticateMachineOperatorUseCase } from "@/domain/mes/application/use
 import { Public } from "@/infra/auth/public";
 
 const authenticateBodySchema = z.object({
-  number: z.number(),
+  operatorNumber: z.number(),
 });
 
 const validationPipe = new ZodValidationPipe(authenticateBodySchema);
@@ -19,10 +19,10 @@ export class AuthenticateController {
   @Post()
   @Public()
   async handle(@Body(validationPipe) body: authenticateBodySchema) {
-    const { number } = body;
+    const { operatorNumber } = body;
 
     const result = await this.authenticate.execute({
-      number,
+      operatorNumber,
     });
 
     if (result.isLeft()) {

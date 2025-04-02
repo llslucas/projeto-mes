@@ -25,7 +25,13 @@ describe("Start setup (E2E)", () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [SectorFactory, MachineOperatorFactory, MachineFactory, WorkOrderFactory, WorkOrderOperationFactory],
+      providers: [
+        SectorFactory,
+        MachineOperatorFactory,
+        MachineFactory,
+        WorkOrderFactory,
+        WorkOrderOperationFactory,
+      ],
     }).compile();
 
     app = moduleRef.createNestApplication();
@@ -52,18 +58,20 @@ describe("Start setup (E2E)", () => {
 
     accessToken = jwt.sign({
       sub: machineOperator.id.toString(),
-    });    
+      role: "OPERATOR",
+    });
 
     const workOrder = await workOrderFactory.makePrismaWorkOrder();
-    const workOrderOperation = await workOrderOperationFactory.makePrismaWorkOrderOperation({
-      workOrderId: workOrder.id,
-    });
+    const workOrderOperation =
+      await workOrderOperationFactory.makePrismaWorkOrderOperation({
+        workOrderId: workOrder.id,
+      });
 
     const machine = await machineFactory.makePrismaMachine({
       sectorId: sector.id,
       machineOperatorId: machineOperator.id,
       workOrderOperationId: workOrderOperation.id,
-      status: "Produzindo"
+      status: "Produzindo",
     });
 
     const response = await request(app.getHttpServer())
@@ -75,22 +83,23 @@ describe("Start setup (E2E)", () => {
         reportTime: new Date(),
       });
 
-    if(response.status !== 201){
-      console.log(response.body.message)
+    if (response.status !== 201) {
+      console.log(response.body.message);
     }
 
     const machineOnDatabase = await prisma.machine.findFirst();
-    const reportOnDatabase = await prisma.report.findFirst();  
+    const reportOnDatabase = await prisma.report.findFirst();
 
     expect(response.status).toBe(201);
 
     expect(machineOnDatabase).toEqual(
       expect.objectContaining({
         status: "Em setup",
-        workOrderOperationId: workOrderOperation.id.toString()
+        workOrderOperationId: workOrderOperation.id.toString(),
       })
     );
-    
-    expect(reportOnDatabase.type).toBe("Setup start")
+
+    expect(reportOnDatabase.type).toBe("Setup start");
   });
 });
+

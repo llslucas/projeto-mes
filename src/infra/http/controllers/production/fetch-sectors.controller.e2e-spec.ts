@@ -46,6 +46,7 @@ describe("Fetch sectors (E2E)", () => {
 
     accessToken = jwt.sign({
       sub: machineOperator.id.toString(),
+      role: "OPERATOR",
     });
   });
 

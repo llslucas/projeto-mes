@@ -57,6 +57,7 @@ describe("Fetch machines (E2E)", () => {
 
     accessToken = jwt.sign({
       sub: machineOperator.id.toString(),
+      role: "OPERATOR",
     });
   });
 

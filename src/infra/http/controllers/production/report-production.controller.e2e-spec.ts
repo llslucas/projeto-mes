@@ -25,7 +25,13 @@ describe("Report production (E2E)", () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [SectorFactory, MachineOperatorFactory, MachineFactory, WorkOrderFactory, WorkOrderOperationFactory],
+      providers: [
+        SectorFactory,
+        MachineOperatorFactory,
+        MachineFactory,
+        WorkOrderFactory,
+        WorkOrderOperationFactory,
+      ],
     }).compile();
 
     app = moduleRef.createNestApplication();
@@ -52,18 +58,20 @@ describe("Report production (E2E)", () => {
 
     accessToken = jwt.sign({
       sub: machineOperator.id.toString(),
-    });    
+      role: "OPERATOR",
+    });
 
     const workOrder = await workOrderFactory.makePrismaWorkOrder();
-    const workOrderOperation = await workOrderOperationFactory.makePrismaWorkOrderOperation({
-      workOrderId: workOrder.id,
-    });
+    const workOrderOperation =
+      await workOrderOperationFactory.makePrismaWorkOrderOperation({
+        workOrderId: workOrder.id,
+      });
 
     const machine = await machineFactory.makePrismaMachine({
       sectorId: sector.id,
       machineOperatorId: machineOperator.id,
       workOrderOperationId: workOrderOperation.id,
-      status: "Produzindo"
+      status: "Produzindo",
     });
 
     const response = await request(app.getHttpServer())
@@ -74,15 +82,15 @@ describe("Report production (E2E)", () => {
         machineOperatorId: machineOperator.id.toString(),
         reportTime: new Date(),
         partsReported: workOrderOperation.quantity,
-        scrapsReported: 0
+        scrapsReported: 0,
       });
 
-    if(response.status !== 201){
-      console.log(response.body.message)
+    if (response.status !== 201) {
+      console.log(response.body.message);
     }
 
     const machineOnDatabase = await prisma.machine.findFirst();
-    const reportOnDatabase = await prisma.report.findFirst();  
+    const reportOnDatabase = await prisma.report.findFirst();
     const operationOnDatabase = await prisma.workOrderOperation.findFirst();
 
     expect(response.status).toBe(201);
@@ -90,12 +98,13 @@ describe("Report production (E2E)", () => {
     expect(machineOnDatabase).toEqual(
       expect.objectContaining({
         status: "Produzindo",
-        workOrderOperationId: workOrderOperation.id.toString()
+        workOrderOperationId: workOrderOperation.id.toString(),
       })
     );
-    
-    expect(reportOnDatabase.type).toBe("Production report")
+
+    expect(reportOnDatabase.type).toBe("Production report");
 
     expect(operationOnDatabase.balance).toBe(0);
   });
 });
+
