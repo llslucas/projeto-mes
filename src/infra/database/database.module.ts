@@ -18,6 +18,8 @@ import { PrismaSetupReportRepository } from "./prisma/repositories/prisma-setup-
 import { PrismaShiftReportRepository } from "./prisma/repositories/prisma-shift-report-repository";
 import { PrismaWorkOrderOperationRepository } from "./prisma/repositories/prisma-work-order-operation-repository";
 import { PrismaWorkOrderRepository } from "./prisma/repositories/prisma-work-order-repository";
+import { UserRepository } from "@/domain/mes/application/repositories/user-repository";
+import { PrismaUserRepository } from "./prisma/repositories/prisma-user-repository";
 
 @Module({
   imports: [],
@@ -59,6 +61,10 @@ import { PrismaWorkOrderRepository } from "./prisma/repositories/prisma-work-ord
       provide: ShiftReportRepository,
       useClass: PrismaShiftReportRepository,
     },
+    {
+      provide: UserRepository,
+      useClass: PrismaUserRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -71,6 +77,7 @@ import { PrismaWorkOrderRepository } from "./prisma/repositories/prisma-work-ord
     ProductionReportRepository,
     SetupReportRepository,
     ShiftReportRepository,
+    UserRepository,
   ],
 })
 export class DatabaseModule {}

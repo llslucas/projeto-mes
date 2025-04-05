@@ -6,9 +6,11 @@ import {
   Controller,
   Post,
   Param,
+  UseGuards,
 } from "@nestjs/common";
 import { CreateWorkOrderOperationUseCase } from "@/domain/mes/application/use-cases/create-work-order-operation";
-import { Public } from "@/infra/auth/public";
+import { Roles } from "@/infra/auth/decorators/roles.decorator";
+import { RolesGuard } from "@/infra/auth/guards/roles.guard";
 
 const createWorkOrderOperationParamSchema = z.object({
   workOrderId: z.string().uuid(),
@@ -38,13 +40,14 @@ export type CreateWorkOrderOperationBodySchema = z.infer<
 >;
 
 @Controller("/work-orders/:workOrderId/operations")
+@UseGuards(RolesGuard)
 export class CreateWorkOrderOperationController {
   constructor(
     private createWorkOrderOperation: CreateWorkOrderOperationUseCase
   ) {}
 
   @Post()
-  @Public()
+  @Roles(["ADMIN", "USER"])
   async handle(
     @Param(paramValidationPipe) param: CreateWorkOrderOperationParamSchema,
     @Body(bodyValidationPipe) body: CreateWorkOrderOperationBodySchema

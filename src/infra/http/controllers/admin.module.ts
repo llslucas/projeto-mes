@@ -13,10 +13,14 @@ import { CreateMachineOperatorController } from "./admin/create-machine-operator
 import { CreateSellOrderController } from "./admin/create-sell-order.controller";
 import { CreateWorkOrderController } from "./admin/create-work-order.controller";
 import { CreateWorkOrderOperationController } from "./admin/create-work-order-operation.controller";
+import { AuthenticateUserController } from "./admin/authenticate-user.controller";
+import { CreateUserUseCase } from "@/domain/mes/application/use-cases/create-user";
+import { AuthenticateUserUseCase } from "@/domain/mes/application/use-cases/authenticate-user";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule],
   controllers: [
+    AuthenticateUserController,
     CreateSectorController,
     CreateMachineController,
     CreateMachineOperatorController,
@@ -25,6 +29,8 @@ import { CreateWorkOrderOperationController } from "./admin/create-work-order-op
     CreateWorkOrderOperationController,
   ],
   providers: [
+    AuthenticateUserUseCase,
+    CreateUserUseCase,
     CreateSectorUseCase,
     CreateMachineUseCase,
     CreateMachineOperatorUseCase,

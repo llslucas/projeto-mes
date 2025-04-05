@@ -1,8 +1,15 @@
 import { z } from "zod";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation.pipe";
-import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
 import { CreateWorkOrderUseCase } from "@/domain/mes/application/use-cases/create-work-order";
-import { Public } from "@/infra/auth/public";
+import { RolesGuard } from "@/infra/auth/guards/roles.guard";
+import { Roles } from "@/infra/auth/decorators/roles.decorator";
 
 const createWorkOrderBodySchema = z.object({
   number: z.number(),
@@ -21,11 +28,12 @@ export type createWorkOrderBodySchema = z.infer<
 >;
 
 @Controller("/work-orders")
+@UseGuards(RolesGuard)
 export class CreateWorkOrderController {
   constructor(private createWorkOrder: CreateWorkOrderUseCase) {}
 
   @Post()
-  @Public()
+  @Roles(["ADMIN", "USER"])
   async handle(@Body(validationPipe) body: createWorkOrderBodySchema) {
     const {
       number,
